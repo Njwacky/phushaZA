@@ -4,13 +4,13 @@
    a link to a learning site still goes to the phone's network, and no
    request is made unless the person taps that link.
    ================================================================ */
-const CACHE = "pusha-2.7.0";     // bump when you ship a new version
+const CACHE = "pusha-2.8.2";     // bump when you ship a new version
 const SHELL = [
   "./", "index.html", "styles.css", "theme.js", "manifest.webmanifest",
   "icons/icon-192.png", "icons/icon-512.png", "icons/icon.svg",
   "js/data-ideas.js", "js/data-learn.js", "js/core.js", "js/i18n.js", "js/pack.js",
   "js/cv-checks.js", "js/misc.js", "js/ideas.js", "js/money.js", "js/path.js",
-  "js/data-diy.js", "js/diy-art.js", "js/diy.js", "js/hint-resize.js", "js/hint-ios.js",
+  "js/data-diy.js", "js/diy-art.js", "js/documents.js", "js/diy.js", "js/hint-resize.js", "js/hint-ios.js",
   /* the ten finished-project photos, cached once and then offline like everything else */
   "img/diy-paperbeads.jpg", "img/diy-wirename.jpg", "img/diy-beadcharms.jpg",
   "img/diy-tasselhanging.jpg", "img/diy-stringart.jpg", "img/diy-candles.jpg",

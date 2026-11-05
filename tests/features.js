@@ -780,6 +780,88 @@ const tag = process.argv[3] || "local";
     exportMatches: tidyExport.subjects === tidyFields.subjects && tidyExport.skills === tidyFields.skills
   };
 
+  /* ---------- 13m. encrypted local files + resume ---------- */
+  await page.evaluate(async () => {
+    localStorage.clear();
+    await new Promise((resolve, reject) => {
+      const request = indexedDB.open("pusha-files", 1);
+      request.onupgradeneeded = () => request.result.createObjectStore("files", { keyPath:"id", autoIncrement:true });
+      request.onsuccess = () => {
+        const tx = request.result.transaction("files", "readwrite");
+        tx.objectStore("files").clear();
+        tx.oncomplete = resolve;
+        tx.onerror = () => reject(tx.error);
+        tx.onabort = () => reject(tx.error);
+      };
+      request.onerror = () => reject(request.error);
+    });
+  });
+  await page.reload();
+  await page.waitForTimeout(300);
+  R.filesRequirePin = await page.evaluate(() => document.querySelector("#filesIn").disabled);
+  await page.evaluate(() => lockSheet("set"));
+  await page.fill("#pin", "864239");
+  await page.fill("#pin2", "864239");
+  await page.waitForFunction(() => !document.querySelector("#pinGo").disabled);
+  await page.evaluate(() => document.querySelector("#pinGo").click());
+  await page.waitForFunction(() => !!Store.get("pusha_vault", {}).__enc);
+  await page.setInputFiles("#filesIn", {
+    name:"certificate.txt",
+    mimeType:"text/plain",
+    buffer:Buffer.from("private certificate contents")
+  });
+  await page.waitForFunction(() => document.querySelectorAll("#filesList .local-file").length === 1);
+  R.filesEncrypted = await page.evaluate(async () => {
+    const db = await new Promise((resolve, reject) => {
+      const req = indexedDB.open("pusha-files", 1);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+    const records = await new Promise((resolve, reject) => {
+      const req = db.transaction("files").objectStore("files").getAll();
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+    const raw = new TextDecoder().decode(records[0].ciphertext);
+    const metadata = new TextDecoder().decode(records[0].metadata);
+    return records.length === 1 && !raw.includes("private certificate contents") &&
+      !metadata.includes("certificate.txt") && !("name" in records[0]);
+  });
+  R.filesBackupRoundTrip = await page.evaluate(async () => {
+    const backup = await backupObj();
+    const clean = backupClean(JSON.stringify(backup));
+    if (!clean || clean.files.length !== 1) return false;
+    await LocalDocuments.replaceBackupRecords(clean.files);
+    return (await LocalDocuments.backupRecords()).length === 1;
+  });
+  await page.evaluate(() => { show("vault"); lockSheet("set"); document.querySelector("#rmPin").click(); });
+  await page.waitForTimeout(100);
+  R.filesPreventPinRemoval = await page.evaluate(() =>
+    !!Store.get("pusha_vault", {}).__enc && $("#toast").textContent === t("files_keep_pin")
+  );
+  await page.evaluate(() => show("ideas"));
+  await page.reload();
+  await page.waitForTimeout(300);
+  R.filesLockedOnRestart = await page.evaluate(() =>
+    locked && document.querySelector(".view.on").id === "v-vault" &&
+    document.querySelector("#filesList").children.length === 0
+  );
+  await page.evaluate(() => lockSheet("unlock"));
+  await page.fill("#pin", "864239");
+  await page.evaluate(() => document.querySelector("#pinGo").click());
+  await page.waitForFunction(() => !locked && document.querySelector(".view.on").id === "v-ideas" &&
+    document.querySelectorAll("#filesList .local-file").length === 1);
+  R.resumesSectionAndFiles = await page.evaluate(() =>
+    document.querySelector(".view.on").id === "v-ideas" &&
+    document.querySelectorAll("#filesList .local-file").length === 1
+  );
+  const [fileDownload] = await Promise.all([
+    page.waitForEvent("download"),
+    page.locator("#filesList button").first().click({ force:true })
+  ]);
+  const downloadedPath = await fileDownload.path();
+  R.fileDownloadRestoresOriginal = (await fs.promises.readFile(downloadedPath, "utf8")) === "private certificate contents";
+
   /* ---------- 14. no page errors ---------- */
   R.errors = errors;
   R.tag = tag;

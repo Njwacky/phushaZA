@@ -183,6 +183,19 @@
       </div>
     </div>
 
+    <div class="card" id="documentsCard">
+      <div class="sechead">
+        <h3 data-i18n="files_title">My files</h3>
+        <label class="btn sm ghost" id="filesAddLabel" style="display:inline-flex;cursor:pointer">
+          <span data-i18n="files_add">Add files</span>
+          <input type="file" id="filesIn" multiple>
+        </label>
+      </div>
+      <p class="tiny muted" data-i18n="files_note">Files stay on this phone and are encrypted with your Vault PIN. Set a PIN before adding files.</p>
+      <div id="filesStatus" class="tiny muted" role="status" aria-live="polite"></div>
+      <div id="filesList"></div>
+    </div>
+
     <button class="btn" id="saveVault" data-i18n="btn_save">Save my details</button>
     <p class="tiny muted" style="text-align:center;margin:10px 0 16px">Saved only on this device. No account, no server, works with no airtime.</p>
 
@@ -402,6 +415,8 @@
 <script src="js/ideas.js"></script>
 <!-- 9. money -->
 <script src="js/money.js"></script>
+<!-- 10. local encrypted document storage -->
+<script src="js/documents.js"></script>
 <!-- 10. path -->
 <script src="js/path.js"></script>
 <script src="js/diy.js"></script>

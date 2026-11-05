@@ -210,18 +210,25 @@ const bkKeys = () => {
   try { for (let i = 0; i < localStorage.length; i++){ const k = localStorage.key(i); if (k && k.indexOf("pusha_") === 0) out.push(k); } } catch(e){}
   return out;
 };
-function backupObj(){
+async function backupObj(){
   const data = {};
   bkKeys().forEach(k => { data[k] = Store.get(k, null); });
-  return { app:"pusha", v:1, at:new Date().toISOString(), data };
+  const files = typeof LocalDocuments !== "undefined" ? await LocalDocuments.backupRecords() : [];
+  return { app:"pusha", v:2, at:new Date().toISOString(), data, files };
 }
 function bkNoteUpdate(){
   const el = $("#bkNote"); if (!el) return;
   const enc = !!(Store.get("pusha_vault", {}) || {}).__enc;
   el.textContent = enc ? t("bk_enc_note") : t("bk_plain_note");
 }
-function backupSave(){
-  const json = JSON.stringify(backupObj(), null, 1);
+async function backupSave(){
+  let json;
+  try {
+    json = JSON.stringify(await backupObj(), null, 1);
+  } catch(error) {
+    return toast(t("files_error"));
+  }
+  if (json.length > 40 * 1024 * 1024) return toast(t("bk_too_large"));
   const name = "pusha-backup-" + new Date().toISOString().slice(0, 10) + ".json";
   let ok = false;
   try {
@@ -241,6 +248,7 @@ function backupSave(){
    file that is too big, and never replace what is on the phone without saying so
    first and offering to keep a copy. */
 function backupClean(raw){
+  if (typeof raw !== "string" || raw.length > 40 * 1024 * 1024) return null;
   let obj = null;
   try { obj = JSON.parse(raw); } catch(e){ return null; }
   if (!obj || obj.app !== "pusha" || !obj.data || typeof obj.data !== "object") return null;
@@ -258,7 +266,9 @@ function backupClean(raw){
     clean[k] = v; n++;
   });
   if (!n) return null;
-  return { data: clean, at: obj.at ? String(obj.at).slice(0, 10) : "", n, bytes };
+  const files = typeof LocalDocuments !== "undefined" ? LocalDocuments.cleanBackupRecords(obj.files) : [];
+  if (!files) return null;
+  return { data: clean, files, at: obj.at ? String(obj.at).slice(0, 10) : "", n: n + files.length, bytes };
 }
 
 function backupLoad(file){
@@ -282,13 +292,34 @@ function backupConfirm(bk){
     <button class="btn ghost" id="bkCancel" style="margin-top:10px">${t("btn_cancel")}</button>`;
   $("#bkCancel").addEventListener("click", closeSheet);
   $("#bkKeep").addEventListener("click", () => { backupSave(); });
-  $("#bkGo").addEventListener("click", () => {
-    bkKeys().forEach(k => { try { localStorage.removeItem(k); } catch(e){} });
-    let bad = 0;
-    Object.keys(bk.data).forEach(k => { if (!Store.set(k, bk.data[k])) bad++; });
-    if (bad) storageFail();
-    closeSheet(); toast(t("bk_loaded"));
-    setTimeout(() => location.reload(), 800);
+  $("#bkGo").addEventListener("click", async () => {
+    const oldData = {};
+    bkKeys().forEach(k => { oldData[k] = localStorage.getItem(k); });
+    let oldFiles = [];
+    let rollbackFailed = false;
+    try {
+      if (typeof LocalDocuments !== "undefined") {
+        oldFiles = LocalDocuments.cleanBackupRecords(await LocalDocuments.backupRecords());
+        await LocalDocuments.replaceBackupRecords(bk.files);
+      }
+      bkKeys().forEach(k => localStorage.removeItem(k));
+      let bad = 0;
+      Object.keys(bk.data).forEach(k => { if (!Store.set(k, bk.data[k])) bad++; });
+      if (bad) throw new Error("storage-full");
+      closeSheet(); toast(t("bk_loaded"));
+      setTimeout(() => location.reload(), 800);
+    } catch(error) {
+      bkKeys().forEach(k => localStorage.removeItem(k));
+      Object.keys(oldData).forEach(k => {
+        try { localStorage.setItem(k, oldData[k]); } catch(restoreError) { rollbackFailed = true; }
+      });
+      if (typeof LocalDocuments !== "undefined" && oldFiles) {
+        try { await LocalDocuments.replaceBackupRecords(oldFiles); }
+        catch(restoreError) { rollbackFailed = true; }
+      }
+      storageFail();
+      toast(rollbackFailed ? t("bk_restore_failed") : t("files_error"));
+    }
   });
   openSheet();
 }

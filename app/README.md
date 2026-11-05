@@ -5,12 +5,12 @@ no account, no tracking. Open `index.html` and it works.
 
 ```
 app/
-├── index.html              the markup only (~24 KB) — loads the fourteen files in js/
+├── index.html              the markup only (~24 KB) — loads the sixteen files in js/
 ├── styles.css              all styling: tokens, light/dark, the desktop tier,
 │                           print (A4)                                    (~29 KB)
 ├── theme.js                tiny <head> script that sets the colour scheme
 │                           before paint (stops the white flash)          (<1 KB)
-├── js/                     all behaviour, ten small files (~175 KB total)
+├── js/                     all behaviour, sixteen files
 │   ├── data-ideas.js 42 KB   the 31 ideas — pure data
 │   ├── data-learn.js 31 KB   resources, learning steps, the method
 │   ├── core.js        9 KB   helpers, storage, theme, nav, SA ID check
@@ -20,6 +20,7 @@ app/
 │   ├── misc.js       10 KB   your own ideas, About
 │   ├── ideas.js      12 KB   list, filters, calculator, quiz
 │   ├── money.js       3 KB   cashbook + goal
+│   ├── documents.js   9 KB   encrypted phone-only file storage and backup
 │   ├── path.js       12 KB   7-day plan, opportunities, scams, PIN lock, boot
 │   ├── data-diy.js   12 KB   the 10 make-and-sell projects — pure data
 │   ├── diy-art.js    40 KB   thirty inline SVG panels (how-to drawings)
@@ -110,9 +111,14 @@ is downloaded for it: it is 29 KB of CSS and one `@media` block.
 | `js/data-ideas.js` | the 31 ideas — **add an idea here** |
 | `js/data-learn.js` | `RES` (58 verified resources), `LEARN` (3 skills + 3 free practice steps per idea), `METHOD` |
 | `js/money.js` | cashbook (with delete + Undo and "copy my cashbook"), savings goal |
+| `js/documents.js` | user files encrypted with the Vault PIN in IndexedDB; file data is included in encrypted backup export/import |
 | `js/path.js` | 7-day plan, opportunities, scams, the PIN lock, **auto-lock**, boot |
 
-All state lives in `localStorage` under `pusha_*` keys:
+Small settings and form data live in `localStorage` under `pusha_*` keys. Attached
+files are encrypted with AES-GCM and stored in IndexedDB on the same browser and
+origin. Adding files requires a Vault PIN; the PIN cannot be removed while files
+remain. Files are limited to 10 MB each and 25 MB total. The app remembers the last
+section you used.
 
 | key | holds |
 |-----|-------|
@@ -125,9 +131,11 @@ All state lives in `localStorage` under `pusha_*` keys:
 | `pusha_blockvar` | which version of each copy-paste block the user picked (`{intro:2, cv:0, pitch:3, fund:1}`) |
 | `pusha_goal` | savings goal name and target |
 | `pusha_plan` | the 7-day plan ticks |
+| `pusha_last_view` | last section, restored on the next visit |
 | `pusha_autolock` | minutes before the vault locks itself (0 = off) |
 | `pusha_myplan`, `pusha_rank`, `pusha_calc_*` | chosen idea, quiz ranking, per-idea calculator numbers |
-| `pusha_vault.__enc` | when a PIN is set, `pusha_vault` holds only `{__enc, salt, iv, ct, iter}` — AES-GCM-256 ciphertext, PBKDF2-SHA256 at the round count this device calibrated (150 000–900 000). The PIN is never stored, in any form. |
+| `pusha_vault.__enc` | when a PIN is set, storage holds only the encrypted vault envelope — AES-GCM-256 ciphertext, PBKDF2-SHA256 at the round count this device calibrated (150 000–900 000). The random file-encryption key is inside that encrypted vault. The PIN is never stored. |
+| IndexedDB `pusha-files` | encrypted document bytes and file names/metadata; decrypted only after the Vault PIN unlocks the app |
 
 ## The 10 make-and-sell projects (2.0)
 
@@ -355,10 +363,10 @@ Rules that hold in all sixteen:
   `saveVault()` shows a red banner plus a "Not saved" toast instead of "Saved to
   this phone".
 * **Backup.** Vault tab → *Save a backup file* writes
-  `pusha-backup-YYYY-MM-DD.json` containing every `pusha_*` key. *Load a backup*
-  validates the file, confirms, replaces everything and reloads. If a PIN is set
-  the vault inside the file is the same ciphertext, so the file cannot be read
-  without the PIN — the note under the buttons says which case you are in.
+  `pusha-backup-YYYY-MM-DD.json` containing every `pusha_*` key and the encrypted
+  attached files. *Load a backup* validates the file, confirms, replaces the saved
+  data and files, then reloads. File contents stay encrypted in the backup; the
+  Vault PIN is required to decrypt them.
 * **Undo** for the three destructive actions (CV section, own idea, cashbook
   line): the toast keeps a six-second Undo button.
 * **Auto-lock**: off / 1 / 5 / 15 minutes. When the tab comes back after being

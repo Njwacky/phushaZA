@@ -10,7 +10,7 @@ node build-dist.js          # writes ../site  (666 KB, 40 files, config included
 ```
 
 What is in `site/`: `index.html`, `styles.css`, `theme.js`, `manifest.webmanifest`,
-`sw.js`, 15 files in `js/`, 10 photos in `img/`, the 9 icons something actually
+`sw.js`, 16 files in `js/`, 10 photos in `img/`, the 9 icons something actually
 points at, `_headers`, `netlify.toml`, `404.html`.
 
 ---

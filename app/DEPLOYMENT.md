@@ -1,4 +1,4 @@
-# Deployment checklist — Pusha 2.7
+# Deployment checklist — Pusha 2.8
 
 Everything here is either a command you can run or a thing to do in a browser.
 Nothing is "should work".
@@ -25,7 +25,8 @@ Single file instead of a server:
 node tests/deploy.js file:///path/to/pusha-standalone.html     # 16 checks, no PWA group
 ```
 
-Last run on this build: **25/25** served (HTTP), **16/16** single file, `pageErrors []`.
+The 2.8 release adds encrypted file attachments and last-section restore. Run the
+deployment checks below against the final hosted build before publishing it.
 
 ---
 
@@ -39,7 +40,9 @@ Last run on this build: **25/25** served (HTTP), **16/16** single file, `pageErr
 | 4 | `node tests/check.js … && node tests/learn.js … && node tests/features.js …` (× local, standalone, http) | 9 runs, all must report `errors []` |
 | 5 | `node tests/deploy.js <url>` | the three promises below |
 
-Current state: version **2.7**, cache `pusha-2.7.0`, standalone **700.0 KB**, 9/9 suite runs green, 25/25 deploy checks green.
+Current state: version **2.8**, cache `pusha-2.8.2`, standalone **720.6 KB**,
+33 service-worker shell entries. The committed historical test counts above were
+recorded before 2.8 and must not be treated as this release's test results.
 
 ---
 
@@ -73,7 +76,7 @@ Current state: version **2.7**, cache `pusha-2.7.0`, standalone **700.0 KB**, 9/
 | PNG icons returning 200 | 4 (incl. 192 and 512) |
 | maskable icons (Android home screen) | 3 |
 | worker | registered, **activated**, controls the page, scope = site root |
-| shell files precached | 35 entries (32 files + navigation) |
+| shell files precached | 33 entries (32 files + navigation) |
 | **Chromium's own installability check** (`Page.getInstallabilityErrors`) | `[]` — no error |
 
 ### OFFLINE — 4 checks (after one visit, network cut)
@@ -111,6 +114,9 @@ Current state: version **2.7**, cache `pusha-2.7.0`, standalone **700.0 KB**, 9/
    remembered" banner and still work. If it claims to save there, something is lying.
 4. **Printing**: Pack → Print / PDF on a phone, confirm the CV is one A4 page. The
    sheet keeps the start-marks and tool tiles out of the printout.
+5. **Local files**: set a Vault PIN, attach a small document, close and reopen the
+   app, unlock, and download it. Confirm file names are hidden while locked and
+   the PIN cannot be removed while attachments remain. Export/import a backup too.
 
 ---
 
@@ -122,7 +128,8 @@ The app keeps everything in the browser's storage on that phone. That means:
   Internet are two separate vaults. A different phone starts empty. There is no
   account, so nothing syncs — by design.
 - **A backup file is the only way to move or to recover.** *Vault → Save a backup*
-  writes a JSON file; *Load a backup* restores it. Tell people this once.
+  writes a JSON file containing settings and encrypted attachments; *Load a backup*
+  restores them. The file contents remain encrypted with the Vault PIN.
 - **iPhone, in a Safari tab, is the risky case.** WebKit's Intelligent Tracking
   Prevention deletes *all* script-writable storage — localStorage, IndexedDB, service
   worker caches — after **seven days of Safari use without visiting the site**.

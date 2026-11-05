@@ -142,7 +142,7 @@ function lockNow(){
   VAULT_FIELDS.forEach(k => { const el = $("#f_" + k); if (el) el.value = ""; });
   fillVault(); setLockedUI();
   if (typeof renderCVThumb === "function") renderCVThumb();
-  show("vault");
+  show("vault", false);
   toast(t("toast_locked"));
 }
 
@@ -208,7 +208,15 @@ function lockSheet(mode){
   const lockBtn2 = $("#lockNowBtn");
   if (lockBtn2) lockBtn2.addEventListener("click", () => { closeSheet(); lockNow(); });
   const rmBtn = $("#rmPin");
-  if (rmBtn) rmBtn.addEventListener("click", removePinSheet);
+  if (rmBtn) rmBtn.addEventListener("click", async () => {
+    try {
+      if (typeof LocalDocuments !== "undefined" && await LocalDocuments.hasFiles())
+        return toast(t("files_keep_pin"));
+      removePinSheet();
+    } catch(error) {
+      toast(t("files_error"));
+    }
+  });
   $$('#sheetBody [data-al]').forEach(b => b.addEventListener("click", () => {
     autoMin = +b.dataset.al;
     if (!Store.set("pusha_autolock", autoMin)) storageFail();
@@ -261,6 +269,7 @@ function lockSheet(mode){
         vault = res.obj || {}; vaultPin = res.holder;
         locked = false; pinFails = 0; pinBlockUntil = 0;
         fillVault(); setLockedUI();
+        restoreLastView();
         if (typeof renderCVThumb === "function") renderCVThumb();
         try { renderCVBanner(); } catch(e){}
         closeSheet(); toast(t("toast_unlocked"));
@@ -310,3 +319,4 @@ $("#lockBtn").addEventListener("click", () => {
   lockSheet("set");
 });
 applyLang();
+restoreLastView();

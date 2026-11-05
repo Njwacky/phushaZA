@@ -29,7 +29,7 @@ const css   = read("styles.css");
 const theme = read("theme.js");
 
 // every js/ file, in exactly the order index.html loads them
-const JS_ORDER = ["data-ideas","data-learn","data-diy","diy-art","core","i18n","pack","cv-checks","misc","ideas","money","path","diy","hint-resize", "hint-ios"];
+const JS_ORDER = ["data-ideas","data-learn","data-diy","diy-art","core","i18n","pack","cv-checks","misc","ideas","money","documents","path","diy","hint-resize", "hint-ios"];
 const app = JS_ORDER.map(f => read("js/" + f + ".js")).join("\n\n");
 
 function must(cond, msg){ if (!cond){ console.error("build failed: " + msg); process.exit(1); } }

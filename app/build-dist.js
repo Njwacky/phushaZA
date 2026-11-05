@@ -23,7 +23,7 @@ const FILES = [
 ];
 const DIRS = { js: "*.js", img: "*.jpg" };   // icons are copied by reference, below
 
-const MUST_HAVE = ["index.html", "sw.js", "manifest.webmanifest", "js/core.js", "js/i18n.js", "icons/icon-192.png"];
+const MUST_HAVE = ["index.html", "sw.js", "manifest.webmanifest", "js/core.js", "js/i18n.js", "js/documents.js", "icons/icon-192.png"];
 
 function copyDir(rel, pattern) {
   const from = path.join(SRC, rel);

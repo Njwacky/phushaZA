@@ -102,7 +102,10 @@ if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
 }
 
 /* ---------- 2. NAV ---------- */
-function show(view){
+const LAST_VIEW_KEY = "pusha_last_view";
+const APP_VIEWS = ["vault","pack","ideas","money","path"];
+function show(view, remember){
+  if (remember !== false && APP_VIEWS.indexOf(view) > -1 && !Store.set(LAST_VIEW_KEY, view)) storageFail();
   if (view === "vault" && typeof bkNoteUpdate === "function") { try { bkNoteUpdate(); } catch(e){} }
   $$(".view").forEach(v => v.classList.toggle("on", v.id === "v-" + view));
   if (view === "pack"){ try { showBlock(activeBlock); renderCVThumb(); } catch(e){} }
@@ -111,6 +114,10 @@ function show(view){
   const pt = $("#pageTitle");
   if (pt){ pt.dataset.i18n = "nav_" + view; if (typeof t === "function") pt.textContent = t("nav_" + view); }
   window.scrollTo({ top:0, behavior:"instant" });
+}
+function restoreLastView(){
+  const saved = Store.get(LAST_VIEW_KEY, "vault");
+  show(locked ? "vault" : (APP_VIEWS.indexOf(saved) > -1 ? saved : "vault"), false);
 }
 $$("#tabs button").forEach(b => b.addEventListener("click", () => show(b.dataset.view)));
 
@@ -188,7 +195,7 @@ function checkSAID(raw){
 }
 
 
-const PUSHA_VERSION = "2.7";
+const PUSHA_VERSION = "2.8";
 
 /* ---------- 3b. SAYING IT OUT LOUD WHEN A SAVE FAILS ---------- */
 function storageFail(){
