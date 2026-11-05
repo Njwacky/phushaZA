@@ -40,7 +40,7 @@ deployment checks below against the final hosted build before publishing it.
 | 4 | `node tests/check.js … && node tests/learn.js … && node tests/features.js …` (× local, standalone, http) | 9 runs, all must report `errors []` |
 | 5 | `node tests/deploy.js <url>` | the three promises below |
 
-Current state: version **2.8**, cache `pusha-2.8.2`, standalone **720.6 KB**,
+Current state: version **2.8**, cache `pusha-2.8.3`, standalone **720.6 KB**,
 33 service-worker shell entries. The committed historical test counts above were
 recorded before 2.8 and must not be treated as this release's test results.
 

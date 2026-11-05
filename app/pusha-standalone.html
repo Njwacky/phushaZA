@@ -3172,10 +3172,10 @@ function persistVault(){
   }
   return Promise.resolve(write(vault));
 }
-function saveVault(silent){
+function saveVault(silent, normalizeText){
   if (locked) return;
   VAULT_FIELDS.forEach(k => { const el = $("#f_" + k); if (el) vault[k] = el.value; });
-  tidyVaultText(true);
+  if (normalizeText !== false) tidyVaultText(true);
   persistVault().then(ok => { if (!silent) toast(ok ? t("toast_saved") : t("toast_nosave")); });
   if (typeof renderCVThumb === "function") renderCVThumb();
   // renderCVBanner() uses the language dictionary, which is not initialised yet during first paint
@@ -3237,7 +3237,7 @@ function renderAvatar(){
 })();
 VAULT_FIELDS.forEach(k => {
   const el = $("#f_" + k); if (!el) return;
-  el.addEventListener("input", () => { clearTimeout(saveT); saveT = setTimeout(() => saveVault(true), 500); });
+  el.addEventListener("input", () => { clearTimeout(saveT); saveT = setTimeout(() => saveVault(true, false), 500); });
   el.addEventListener("change", () => {
     if (k === "subjects" || k === "skills"){
       const clean = tidyText(el.value, k === "subjects" ? "every" : "first");

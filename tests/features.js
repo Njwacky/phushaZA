@@ -710,6 +710,13 @@ const tag = process.argv[3] || "local";
     skills: document.querySelector("#f_skills").value,
     stored: (() => { try { return JSON.parse(localStorage.getItem("pusha_vault") || "{}"); } catch(e){ return {}; } })()
   }));
+  await page.fill("#f_subjects", "maths,");
+  await page.waitForTimeout(650);
+  R.subjectCommaSurvivesAutosave = await page.inputValue("#f_subjects") === "maths,";
+  await page.fill("#f_subjects", "maths, physical science");
+  await page.click("#f_year");
+  await page.waitForTimeout(300);
+  R.subjectsNormalizeOnBlur = await page.inputValue("#f_subjects") === "Maths, Physical Science";
   // the CV and the copy blocks read the vault, not the field
   const tidyExport = await page.evaluate(() => { syncVaultFields(); return { subjects: vault.subjects, skills: vault.skills }; });
   // leave the vault as we found it
