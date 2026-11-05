@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pusha — the "start here" mark</title>
+<style>
+ :root{--bg:#f7f5ef;--card:#fff;--ink:#0e211b;--muted:#5d6b64;--line:#e4e2d9;--brand:#0b5c46;--accent:#c8891f}
+ body.dark{--bg:#12171a;--card:#1a2126;--ink:#eef2ee;--muted:#9fb0a8;--line:#2b353b}
+ *{box-sizing:border-box}
+ body{margin:0;padding:22px;background:var(--bg);color:var(--ink);
+   font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+ h1{font-size:20px;margin:0 0 4px;letter-spacing:-.02em}
+ p.sub{margin:0 0 18px;color:var(--muted);font-size:13px}
+ .row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+ .opt{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;min-width:186px}
+ .opt.win{border-color:var(--brand);box-shadow:0 0 0 2px rgba(11,92,70,.12)}
+ .tag{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+ .opt.win .tag{color:var(--brand)}
+ .sizes{display:flex;align-items:flex-end;gap:14px;margin-bottom:10px}
+ .sizes div{text-align:center;font-size:10.5px;color:var(--muted)}
+ .ctx{display:flex;align-items:center;gap:9px;font-weight:800;font-size:19px;letter-spacing:-.02em;margin-top:6px}
+ .ctx svg{width:19px;height:19px;color:var(--brand);opacity:.62}
+ .dark .ctx svg{opacity:.8}
+ .real{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+ .note{font-size:12.5px;color:var(--muted);margin-top:6px}
+ button{font:inherit;font-size:13px;font-weight:700;padding:8px 14px;border-radius:10px;border:1px solid var(--line);
+   background:var(--card);color:var(--ink);cursor:pointer}
+ svg{stroke-linecap:round;stroke-linejoin:round;fill:none;stroke:currentColor}
+</style></head>
+<body>
+<h1>The "start here" mark</h1>
+<p class="sub">A person laying a brick onto the foundation course — drawn at 24 px grid, shown at 32 / 19 / 16 px, then in place next to a heading. Option C is the one shipping.</p>
+
+<div class="row" id="opts"></div>
+
+<div class="real">
+  <div class="tag">In the app</div>
+  <div class="ctx"><svg><use href="#C"/></svg> NO SKILL YET? START HERE</div>
+  <div class="ctx" style="font-size:16px;margin-top:10px"><svg><use href="#C"/></svg> Money</div>
+  <div class="note">19 px, brand green, 62 % opacity. It reads as a footnote to the title, never as a button.</div>
+</div>
+
+<p style="margin:18px 0 0"><button id="t">Dark theme</button></p>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="A" viewBox="0 0 24 24" stroke-width="1.7">
+    <path d="M2.5 21h19"/><path d="M7 17.2h13.5v3.2H7z"/><path d="M13.6 17.2v3.2"/>
+    <path d="M13 11h6.6v3.4H13z"/><circle cx="4.8" cy="7.2" r="2"/><path d="M4.8 9.4v11.4"/><path d="M4.8 11.8 12.6 13"/>
+  </symbol>
+  <symbol id="B" viewBox="0 0 24 24" stroke-width="1.7">
+    <path d="M2.5 21h19"/><path d="M6.5 17.2h14v3.2h-14z"/><path d="M13.5 17.2v3.2"/>
+    <path d="M12 10.6h7v3.2h-7z"/><circle cx="11" cy="6.4" r="1.9"/><path d="M11 8.6v10.2"/><path d="M11 11.6 12.4 11"/>
+  </symbol>
+  <symbol id="C" viewBox="0 0 24 24" stroke-width="1.7">
+    <path d="M3 21h18"/><path d="M5 16.6h9v3.4H5z"/><path d="M14 16.6h5.6v3.4H14z"/>
+    <path d="M8.4 10.4h8.6v3.4H8.4z"/><path d="M17 11.6h3.2"/><path d="M8.4 11.6H5.6"/>
+    <circle cx="4" cy="6.6" r="1.9"/><path d="M4 8.6v8.4"/><path d="M4 10.6 8 11.4"/>
+  </symbol>
+  <symbol id="D" viewBox="0 0 24 24" stroke-width="1.7">
+    <path d="M2.5 21.2h19"/><path d="M4.6 16.8h8.2v3.6H4.6z"/><path d="M12.8 16.8h6.8v3.6h-6.8z"/>
+    <path d="M9.6 10.2h8v3.6h-8z"/><circle cx="5.6" cy="6.4" r="2"/><path d="M5.6 8.6v12"/><path d="M5.6 11.4 9.4 12.2"/>
+  </symbol>
+</svg>
+
+<script>
+const opts = [
+  {id:"A", name:"A — figure at the end of the wall", win:false},
+  {id:"B", name:"B — figure leaning in", win:false},
+  {id:"C", name:"C — figure + full course (shipping)", win:true},
+  {id:"D", name:"D — figure standing on the course", win:false}
+];
+document.getElementById("opts").innerHTML = opts.map(o => `
+  <div class="opt${o.win ? " win" : ""}">
+    <div class="tag">${o.name}</div>
+    <div class="sizes">
+      <div><svg width="32" height="32"><use href="#${o.id}"/></svg><br>32</div>
+      <div><svg width="19" height="19"><use href="#${o.id}"/></svg><br>19</div>
+      <div><svg width="16" height="16"><use href="#${o.id}"/></svg><br>16</div>
+    </div>
+    <div class="ctx" style="font-size:15px"><svg width="19" height="19"><use href="#${o.id}"/></svg> Start here</div>
+  </div>`).join("");
+document.getElementById("t").addEventListener("click", e => {
+  document.body.classList.toggle("dark");
+  e.target.textContent = document.body.classList.contains("dark") ? "Light theme" : "Dark theme";
+});
+</script>
+</body></html>

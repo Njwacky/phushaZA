@@ -1,0 +1,180 @@
+/* ================================================================
+   Pusha — build-dist.js — the folder you actually upload
+   -----------------------------------------------------------------
+   The app folder also holds internal notes (README, IMPROVEMENT-AUDIT,
+   MARKET-AND-GROWTH) and the browser tests. None of that belongs on a
+   public site, so this copies only what the browser asks for into
+   ../site/ and writes the Netlify configuration next to it.
+
+       node build-dist.js            → ../site, ready to drag onto Netlify
+       node build-dist.js out        → any folder you name
+
+   It refuses to run if a file the page needs is missing, so a typo in
+   the file list cannot ship half an app.
+   ================================================================ */
+const fs = require("fs");
+const path = require("path");
+
+const SRC = __dirname;
+const OUT = path.resolve(SRC, "..", process.argv[2] || "site");
+
+const FILES = [
+  "index.html", "styles.css", "theme.js", "manifest.webmanifest", "sw.js"
+];
+const DIRS = { js: "*.js", img: "*.jpg" };   // icons are copied by reference, below
+
+const MUST_HAVE = ["index.html", "sw.js", "manifest.webmanifest", "js/core.js", "js/i18n.js", "icons/icon-192.png"];
+
+function copyDir(rel, pattern) {
+  const from = path.join(SRC, rel);
+  if (!fs.existsSync(from)) throw new Error("missing folder: " + rel);
+  const re = new RegExp("^" + pattern.replace(".", "\\.").replace("*", ".*") + "$");
+  const names = fs.readdirSync(from).filter((n) => re.test(n) && fs.statSync(path.join(from, n)).isFile());
+  if (!names.length) throw new Error("nothing matched " + rel + "/" + pattern);
+  fs.mkdirSync(path.join(OUT, rel), { recursive: true });
+  let bytes = 0;
+  for (const n of names) {
+    const buf = fs.readFileSync(path.join(from, n));
+    fs.writeFileSync(path.join(OUT, rel, n), buf);
+    bytes += buf.length;
+  }
+  return { count: names.length, bytes };
+}
+
+/* ---------- the files the page actually asks for ---------- */
+const html = fs.readFileSync(path.join(SRC, "index.html"), "utf8");
+const wanted = [
+  ...[...html.matchAll(/src="([^"]+)"/g)].map((m) => m[1]),
+  ...[...html.matchAll(/href="([^"]+\.(?:css|webmanifest|png|svg))"/g)].map((m) => m[1])
+].filter((f) => !/^https?:|^data:/.test(f));
+
+fs.rmSync(OUT, { recursive: true, force: true });
+fs.mkdirSync(OUT, { recursive: true });
+
+let total = 0;
+const report = [];
+for (const f of FILES) {
+  const p = path.join(SRC, f);
+  if (!fs.existsSync(p)) throw new Error("missing: " + f);
+  const buf = fs.readFileSync(p);
+  fs.writeFileSync(path.join(OUT, f), buf);
+  total += buf.length;
+  report.push([f, buf.length]);
+}
+for (const [dir, pattern] of Object.entries(DIRS)) {
+  const r = copyDir(dir, pattern);
+  total += r.bytes;
+  report.push([dir + "/ (" + r.count + " files)", r.bytes]);
+}
+
+/* ---------- only the icons something actually points at ---------- */
+const manifestSrcs = (() => {
+  try {
+    const m = JSON.parse(fs.readFileSync(path.join(SRC, "manifest.webmanifest"), "utf8"));
+    return (m.icons || []).map((i) => i.src);
+  } catch (e) { return []; }
+})();
+const linkIcons = [...html.matchAll(/<link[^>]+href="([^"]+)"[^>]*>/g)]
+  .map((m) => m[1])
+  .filter((h) => /favicon|apple-touch|icon/.test(h) && !/^https?:/.test(h));
+const iconList = [...new Set([...manifestSrcs, ...linkIcons])].filter((f) => f.startsWith("icons/"));
+fs.mkdirSync(path.join(OUT, "icons"), { recursive: true });
+let iconBytes = 0;
+for (const rel of iconList) {
+  const p = path.join(SRC, rel);
+  if (!fs.existsSync(p)) throw new Error("a manifest or <link> points at a missing icon: " + rel);
+  const buf = fs.readFileSync(p);
+  fs.writeFileSync(path.join(OUT, rel), buf);
+  iconBytes += buf.length;
+}
+report.push(["icons/ (" + iconList.length + " referenced)", iconBytes]);
+total += iconBytes;
+
+/* the service worker's shell list is the other source of truth — check both ways */
+const shell = (fs.readFileSync(path.join(SRC, "sw.js"), "utf8").match(/const SHELL = \[([\s\S]*?)\];/)[1].match(/"[^"]+"/g) || [])
+  .map((s) => s.replace(/"/g, ""))
+  .filter((s) => s !== "./");
+const missingShell = shell.filter((f) => !fs.existsSync(path.join(OUT, f)));
+if (missingShell.length) throw new Error("the service worker wants files that are not in the folder: " + missingShell.join(", "));
+for (const f of MUST_HAVE) if (!fs.existsSync(path.join(OUT, f))) throw new Error("missing after copy: " + f);
+const missingWanted = wanted.filter((f) => !fs.existsSync(path.join(OUT, f)));
+if (missingWanted.length) throw new Error("index.html asks for files that are not there: " + missingWanted.join(", "));
+
+/* ---------- Netlify: headers that keep the app honest ---------- */
+/* No file names carry a content hash, so nothing may be cached hard by the HTTP
+   cache. The service worker is the cache — it has its own versioned name, which
+   the app bumps on every release. */
+const _headers = `# Pusha — generated by build-dist.js
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=()
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; frame-ancestors 'self'; base-uri 'none'; form-action 'none'; object-src 'none'
+  Cache-Control: public, max-age=0, must-revalidate
+
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/manifest.webmanifest
+  Content-Type: application/manifest+json
+  Cache-Control: public, max-age=0, must-revalidate
+
+/js/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/img/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/icons/*
+  Cache-Control: public, max-age=0, must-revalidate
+`;
+fs.writeFileSync(path.join(OUT, "_headers"), _headers);
+
+const toml = `# Pusha — generated by build-dist.js
+# If you connect a git repo instead of dragging the folder:
+#   Netlify → Base directory: (leave empty)   Publish directory: this folder
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    X-Frame-Options = "SAMEORIGIN"
+    Permissions-Policy = "geolocation=(), camera=(), microphone=(), payment=()"
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+`;
+fs.writeFileSync(path.join(OUT, "netlify.toml"), toml);
+
+/* a 404 that leads back to the app rather than a Netlify advert */
+fs.writeFileSync(path.join(OUT, "404.html"),
+  '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
+  '<title>Pusha — not found</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f7f5ef;' +
+  'color:#0e211b;font:16px/1.5 system-ui,sans-serif;text-align:center;padding:24px}a{color:#0b5c46;font-weight:800}</style></head>' +
+  '<body><div><h1 style="font-size:20px;margin:0 0 6px">That page does not exist</h1>' +
+  '<p style="margin:0 0 16px;color:#5d6b64">Pusha is one page. Everything is inside it.</p>' +
+  '<a href="/">Open Pusha</a></div></body></html>');
+
+report.sort((a, b) => b[1] - a[1]);
+console.log("upload folder: " + OUT);
+for (const [f, b] of report) console.log("  " + (b / 1024).toFixed(1).padStart(7) + " KB  " + f);
+console.log("  " + (total / 1024).toFixed(0) + " KB of app + config files");
+console.log("  shell check: " + shell.length + " files the worker expects, all present");
+console.log("\nnext: drag that folder onto https://app.netlify.com/drop");
+console.log("then: NODE_PATH=/tmp/node_modules node tests/deploy.js https://your-site.netlify.app/");
