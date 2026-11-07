@@ -117,7 +117,9 @@ is downloaded for it: it is 29 KB of CSS and one `@media` block.
 | `js/path.js` | 7-day plan, opportunities, scams, the PIN lock, **auto-lock**, boot |
 
 In **Pack → Build my PDF pack**, add the current Pusha CV and individual PDF files,
-or choose PDFs from the unlocked Vault, move or remove individual pages, then download a single combined PDF. All processing
+or choose PDFs from the unlocked Vault, move or remove individual pages, then download a single combined PDF. A selected
+Vault file is hidden from the chooser until all of its pages are removed, and
+identical PDFs cannot be added twice (even under another name). All processing
 is on-device and works offline after the app shell has cached. Uploaded PDFs are
 temporary in-memory working copies, not files saved to the Vault. The downloaded
 PDF is not PIN-encrypted; keep it private. The CV is embedded as an image of the
