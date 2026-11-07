@@ -807,8 +807,8 @@ const tag = process.argv[3] || "local";
   await page.waitForTimeout(300);
   R.filesRequirePin = await page.evaluate(() => document.querySelector("#filesIn").disabled);
   await page.evaluate(() => lockSheet("set"));
-  await page.fill("#pin", "864239");
-  await page.fill("#pin2", "864239");
+  await page.fill("#pin", "86423957");
+  await page.fill("#pin2", "86423957");
   await page.waitForFunction(() => !document.querySelector("#pinGo").disabled);
   await page.evaluate(() => document.querySelector("#pinGo").click());
   await page.waitForFunction(() => !!Store.get("pusha_vault", {}).__enc);
@@ -854,7 +854,7 @@ const tag = process.argv[3] || "local";
     document.querySelector("#filesList").children.length === 0
   );
   await page.evaluate(() => lockSheet("unlock"));
-  await page.fill("#pin", "864239");
+  await page.fill("#pin", "86423957");
   await page.evaluate(() => document.querySelector("#pinGo").click());
   await page.waitForFunction(() => !locked && document.querySelector(".view.on").id === "v-ideas" &&
     document.querySelectorAll("#filesList .local-file").length === 1);
@@ -862,9 +862,10 @@ const tag = process.argv[3] || "local";
     document.querySelector(".view.on").id === "v-ideas" &&
     document.querySelectorAll("#filesList .local-file").length === 1
   );
+  await page.evaluate(() => show("vault"));
   const [fileDownload] = await Promise.all([
     page.waitForEvent("download"),
-    page.locator("#filesList button").first().click({ force:true })
+    page.locator("#filesList button").first().click()
   ]);
   const downloadedPath = await fileDownload.path();
   R.fileDownloadRestoresOriginal = (await fs.promises.readFile(downloadedPath, "utf8")) === "private certificate contents";

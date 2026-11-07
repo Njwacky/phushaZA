@@ -114,6 +114,8 @@ is downloaded for it: it is 29 KB of CSS and one `@media` block.
 | `js/documents.js` | user files encrypted with the Vault PIN in IndexedDB; file data is included in encrypted backup export/import |
 | `js/path.js` | 7-day plan, opportunities, scams, the PIN lock, **auto-lock**, boot |
 
+The printable CV has three selectable layouts (Classic, Modern and Simple); the selected layout is remembered and used for printing.
+
 Small settings and form data live in `localStorage` under `pusha_*` keys. Attached
 files are encrypted with AES-GCM and stored in IndexedDB on the same browser and
 origin. Adding files requires a Vault PIN; the PIN cannot be removed while files
@@ -131,6 +133,7 @@ section you used.
 | `pusha_blockvar` | which version of each copy-paste block the user picked (`{intro:2, cv:0, pitch:3, fund:1}`) |
 | `pusha_goal` | savings goal name and target |
 | `pusha_plan` | the 7-day plan ticks |
+| `pusha_cv_template` | selected printable CV layout |
 | `pusha_last_view` | last section, restored on the next visit |
 | `pusha_autolock` | minutes before the vault locks itself (0 = off) |
 | `pusha_myplan`, `pusha_rank`, `pusha_calc_*` | chosen idea, quiz ranking, per-idea calculator numbers |

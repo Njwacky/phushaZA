@@ -155,7 +155,10 @@ textarea{min-height:74px;resize:vertical}
   .grip.new::after{animation:none;opacity:.6}
 }
 html[data-theme="dark"] .grip.new::after{border-color:var(--accent)}
-input[type=file]{display:none}
+/* Keep file inputs available to label activation and keyboard users on mobile. */
+input[type=file]{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+label:focus-within{outline:2px solid var(--brand);outline-offset:3px}
+#filesPin[hidden]{display:none}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
 .muted{color:var(--muted)}
@@ -336,6 +339,18 @@ html[data-theme="dark"] .tile.grow{background:#1a2c13;color:#9ed67a}
 .doc .pillrow span{font:700 10.5px/1 -apple-system,"Segoe UI",Inter,Arial,sans-serif;background:#eef3f0;color:#0b5c46;
   border-radius:5px;padding:4px 7px}
 .doc .foot{margin-top:16px;border-top:1px solid #dcdad2;padding-top:6px;font:10px/1.5 -apple-system,"Segoe UI",Inter,Arial,sans-serif;color:#7a8783}
+/* Three print-friendly layouts, using the same information in every template. */
+.cv-template-picker{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 12px}
+.doc.cv-template-modern{font-family:-apple-system,"Segoe UI",Arial,sans-serif}
+.doc.cv-template-modern .head{border-bottom:3px solid #0b5c46;padding-bottom:14px}
+.doc.cv-template-modern h2{border:0;margin-top:18px;letter-spacing:.08em}
+.doc.cv-template-modern .ph{border-radius:50%}
+.doc.cv-template-simple{font-family:Arial,sans-serif;color:#111}
+.doc.cv-template-simple h1,.doc.cv-template-simple h2,.doc.cv-template-simple .role,.doc.cv-template-simple .contact{color:#111}
+.doc.cv-template-simple h1{font-family:Arial,sans-serif;font-weight:700;letter-spacing:0}
+.doc.cv-template-simple h2{border-bottom:1px solid #555;letter-spacing:.04em}
+.doc.cv-template-simple .pillrow span{background:none;color:#111;border:1px solid #aaa}
+.doc.cv-template-simple .ph{background:#f3f3f3;color:#555}
 .docnote{font:11.5px/1.5 -apple-system,"Segoe UI",Inter,Arial,sans-serif;color:var(--muted);margin:10px 0 0}
 
 

@@ -288,7 +288,8 @@ function lockSheet(mode){
         await calibrate();
         syncVaultFields();
         const made = await enc.encrypt(vault, pin, kdfIter);
-        Store.set("pusha_vault", made.blob); vaultPin = made.holder;
+        if (!Store.set("pusha_vault", made.blob)) { storageFail(); return toast(t("toast_nosave")); }
+        vaultPin = made.holder;
         locked = false; fillVault(); setLockedUI();
         if (typeof bkNoteUpdate === "function") bkNoteUpdate();
         closeSheet(); toast(t("toast_pin_set"));

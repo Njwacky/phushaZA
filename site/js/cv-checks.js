@@ -72,6 +72,12 @@ function ageFrom(dob){ if (!dob) return ""; const d = new Date(dob); if (isNaN(d
   const t = new Date(); let a = t.getFullYear() - d.getFullYear();
   const m = t.getMonth() - d.getMonth(); if (m < 0 || (m === 0 && t.getDate() < d.getDate())) a--; return a > 0 ? a : ""; }
 
+const CV_TEMPLATES = ["classic", "modern", "simple"];
+function cvTemplate(){
+  const selected = Store.get("pusha_cv_template", "classic");
+  return CV_TEMPLATES.includes(selected) ? selected : "classic";
+}
+
 function cvDoc(){
   const v = vault;
   const name = v.fullname || "Your full name";
@@ -87,7 +93,7 @@ function cvDoc(){
   const contact = [v.phone, v.email, v.address].filter(Boolean).join("  ·  ") || "Add your phone, email and address in the Vault";
   const photo = safePhoto(v.photo);   // a remote or non-raster "photo" is dropped, never rendered
 
-  return `<div class="doc">
+  return `<div class="doc cv-template-${cvTemplate()}">
     <div class="head">
       <div class="meta">
         <h1>${esc(name)}</h1>
@@ -170,7 +176,11 @@ function openCV(){
         : `<p class="tiny muted" style="margin:0">${t("notif_ok")}</p>`}
     </div>
     <p class="small muted" style="margin:0 0 12px">${miss.length ? t("cv_howto") : t("cv_howto_ok")}</p>
-    ${cvDoc()}
+    <div class="cv-template-picker" role="group" aria-label="${t("cv_template")}">
+      <span class="tiny muted">${t("cv_template")}</span>
+      ${CV_TEMPLATES.map(name => `<button type="button" class="chip sm${cvTemplate() === name ? " on" : ""}" data-cv-template="${name}" aria-pressed="${cvTemplate() === name}">${t("cv_" + name)}</button>`).join("")}
+    </div>
+    <div id="cvDocument">${cvDoc()}</div>
     <p class="tiny muted" style="margin:10px 0 0">${t("cv_pdf_hint")}</p>
     <div class="btns" style="margin:8px 0 0">
       <button class="btn" id="printCV">${ico("print","sm")} ${t("cv_print")}</button>
@@ -190,6 +200,15 @@ function openCV(){
       ? "Your photo is on it. One page, printed or saved as a PDF — send the same file every time."
       : "No photo yet — add one in the Vault tab and it will appear here. A CV without a photo is fine too."}</p>`;
 
+  $$("#sheetBody [data-cv-template]").forEach(button => button.addEventListener("click", () => {
+    if (!Store.set("pusha_cv_template", button.dataset.cvTemplate)) storageFail();
+    $("#cvDocument").innerHTML = cvDoc();
+    $$("#sheetBody [data-cv-template]").forEach(option => {
+      const selected = option.dataset.cvTemplate === cvTemplate();
+      option.classList.toggle("on", selected);
+      option.setAttribute("aria-pressed", String(selected));
+    });
+  }));
   $$("#sheetBody [data-fix]").forEach(b => b.addEventListener("click", () => { closeSheet(); focusField(b.dataset.fix); }));
   $$("#sheetBody [data-del]").forEach(b => b.addEventListener("click", () => {
     const before = cvExtras().slice();

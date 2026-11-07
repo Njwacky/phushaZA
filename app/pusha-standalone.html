@@ -180,7 +180,10 @@ textarea{min-height:74px;resize:vertical}
   .grip.new::after{animation:none;opacity:.6}
 }
 html[data-theme="dark"] .grip.new::after{border-color:var(--accent)}
-input[type=file]{display:none}
+/* Keep file inputs available to label activation and keyboard users on mobile. */
+input[type=file]{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+label:focus-within{outline:2px solid var(--brand);outline-offset:3px}
+#filesPin[hidden]{display:none}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
 .muted{color:var(--muted)}
@@ -361,6 +364,18 @@ html[data-theme="dark"] .tile.grow{background:#1a2c13;color:#9ed67a}
 .doc .pillrow span{font:700 10.5px/1 -apple-system,"Segoe UI",Inter,Arial,sans-serif;background:#eef3f0;color:#0b5c46;
   border-radius:5px;padding:4px 7px}
 .doc .foot{margin-top:16px;border-top:1px solid #dcdad2;padding-top:6px;font:10px/1.5 -apple-system,"Segoe UI",Inter,Arial,sans-serif;color:#7a8783}
+/* Three print-friendly layouts, using the same information in every template. */
+.cv-template-picker{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 12px}
+.doc.cv-template-modern{font-family:-apple-system,"Segoe UI",Arial,sans-serif}
+.doc.cv-template-modern .head{border-bottom:3px solid #0b5c46;padding-bottom:14px}
+.doc.cv-template-modern h2{border:0;margin-top:18px;letter-spacing:.08em}
+.doc.cv-template-modern .ph{border-radius:50%}
+.doc.cv-template-simple{font-family:Arial,sans-serif;color:#111}
+.doc.cv-template-simple h1,.doc.cv-template-simple h2,.doc.cv-template-simple .role,.doc.cv-template-simple .contact{color:#111}
+.doc.cv-template-simple h1{font-family:Arial,sans-serif;font-weight:700;letter-spacing:0}
+.doc.cv-template-simple h2{border-bottom:1px solid #555;letter-spacing:.04em}
+.doc.cv-template-simple .pillrow span{background:none;color:#111;border:1px solid #aaa}
+.doc.cv-template-simple .ph{background:#f3f3f3;color:#555}
 .docnote{font:11.5px/1.5 -apple-system,"Segoe UI",Inter,Arial,sans-serif;color:var(--muted);margin:10px 0 0}
 
 
@@ -801,6 +816,7 @@ html[data-theme="dark"] .ctic.wa{background:rgba(37,211,102,.18);color:#5ee39b}
     <div class="card" id="documentsCard">
       <div class="sechead">
         <h3 data-i18n="files_title">My files</h3>
+        <button class="btn sm ghost" type="button" id="filesPin" hidden></button>
         <label class="btn sm ghost" id="filesAddLabel" style="display:inline-flex;cursor:pointer">
           <span data-i18n="files_add">Add files</span>
           <input type="file" id="filesIn" multiple>
@@ -2552,6 +2568,7 @@ function toastAction(msg, label, fn){
 const LANGS = [["en","English","EN"],["zu","isiZulu","ZU"],["st","Sesotho","ST"],["nr","isiNdebele","NR"]];
 const I18N = {
 en:{
+ files_set_pin:"Set a PIN to add files",cv_template:"CV template",cv_classic:"Classic",cv_modern:"Modern",cv_simple:"Simple",
  nav_vault:"Vault",nav_pack:"Pack",nav_ideas:"Ideas",nav_money:"Money",nav_path:"Path",
  p_version:"Version",p_var_help:"Pick the one that sounds like you.",
 id_chip:"A4 · about R2 at a library",docs_chip:"Tick what you have",
@@ -2690,6 +2707,7 @@ lock_pin_again:"Type the PIN again",
 
 ct_title:"Spotted a mistake? Tell us",ct_call:"Call or SMS",ct_mail:"Email",ct_note:"Free to message. Nothing is sent unless you tap.",fb_send_email:"Send it by email",ct_wa_note:"Send us a message — free",fb_send_wa:"Send on WhatsApp",ios_title:"Keep this on your iPhone",ios_body:"iPhone deletes a website's saved details after 7 days without a visit. On the home screen it does not.",ios_step1:"Tap Share at the bottom of Safari.",ios_step2:"Choose “Add to Home Screen”, then open Pusha from the new icon.",ios_ok:"Got it",ios_backup:"Save a backup",ios_later:"Not now"},
 zu:{
+ files_set_pin:"Setha i-PIN ukufaka amafayela",cv_template:"Isifanekiso se-CV",cv_classic:"Okwakudala",cv_modern:"Okwesimanje",cv_simple:"Okulula",
  nav_vault:"Umqulu",nav_pack:"Iphakethe",nav_ideas:"Imibono",nav_money:"Imali",nav_path:"Indlela",
  p_version:"Inguqulo",p_var_help:"Khetha lowo ozwakala njengawe.",
 id_chip:"A4 · cishe R2 emtatsheni wezincwadi",docs_chip:"Beka uphawu kokunakho",
@@ -2830,6 +2848,7 @@ lock_pin_again:"Bhala i-PIN futhi",
 
 ct_title:"Ubonile iphutha? Sitshele",ct_call:"Shayela noma thumela i-SMS",ct_mail:"I-imeyili",ct_note:"Kumahhala ukuthumela umlayezo. Akukho okuthunyelwayo ngaphandle kokuthi ucofe.",fb_send_email:"Yithumele nge-imeyili",ct_wa_note:"Sithumelele umlayezo — kumahhala",fb_send_wa:"Thumela nge-WhatsApp",ios_title:"Gcina lokhu ku-iPhone yakho",ios_body:"I-iPhone isusa imininingwane egciniwe yewebhusayithi ngemva kwezinsuku ezi-7 ngaphandle kokuvakasha. Esikrinini sasekhaya ayikwenzi lokho.",ios_step1:"Thinta u-Share ngezansi kwe-Safari.",ios_step2:"Khetha “Add to Home Screen”, bese uvula i-Pusha kusithonjana esisha.",ios_ok:"Ngizwile",ios_backup:"Gcina ikhophi",ios_later:"Hhayi manje"},
 st:{
+ files_set_pin:"Beha PIN ho kenya difaele",cv_template:"Sebopeho sa CV",cv_classic:"Tlwaelehileng",cv_modern:"Sejwalejwale",cv_simple:"Bonolo",
  nav_vault:"Polokelo",nav_pack:"Pakete",nav_ideas:"Mehopolo",nav_money:"Chelete",nav_path:"Tsela",
  p_version:"Mofuta",p_var_help:"Kgetha eo e utlwahalang jwaloka wena.",
 id_chip:"A4 · hoo e ka bang R2 laebraring",docs_chip:"Tshwaya seo o nang le sona",
@@ -2970,6 +2989,7 @@ lock_pin_again:"Ngola PIN hape",
 
 ct_title:"O bone phoso? Re bolelle",ct_call:"Letsa kapa romela SMS",ct_mail:"Imeile",ct_note:"Ho lokolohile ho romela molaetsa. Ha ho se romelwang ntle le ha o tobetsa.",fb_send_email:"E romele ka imeile",ct_wa_note:"Re romele molaetsa — mahala",fb_send_wa:"Romela ka WhatsApp",ios_title:"Boloka sena ho iPhone ya hao",ios_body:"iPhone e hlakola dintlha tse bolokilweng tsa webosaete ka mora matsatsi a 7 ntle le ho e etela. Skrineng sa hae ha e etse jwalo.",ios_step1:"Tobetsa Share ka tlase ho Safari.",ios_step2:"Kgetha “Add to Home Screen”, ebe o bula Pusha ho ikhone e ntjha.",ios_ok:"Ke utlwile",ios_backup:"Boloka backup",ios_later:"E seng jwale"},
 nr:{
+ files_set_pin:"Setha i-PIN ukufaka amafayela",cv_template:"Isifanekiso se-CV",cv_classic:"Sakade",cv_modern:"Sesimanje",cv_simple:"Esilula",
  nav_vault:"Umqulu",nav_pack:"Iphakethe",nav_ideas:"Imibono",nav_money:"Imali",nav_path:"Indlela",
  p_version:"Inguqulo",p_var_help:"Khetha lelo elizwakala njengawe.",
 id_chip:"A4 · cishe R2 lapaebrari",docs_chip:"Tshwaya okunawo",
@@ -3600,6 +3620,7 @@ function applyLang(){
   document.documentElement.toggleAttribute("data-lang-not-en", LANG !== "en");
   [renderBlocks, () => { try { showBlock(activeBlock, false, true); } catch(e){} },
    renderMyIdeas, renderIdeas, renderCVThumb, renderCVBanner, renderMoney, renderPlan,
+   () => { if (typeof renderLocalDocuments === "function") renderLocalDocuments(); },
    () => { try { renderIdInfo(); renderDocs(); } catch(e){} }]
     .forEach(fn => { try { fn(); } catch(e){} });
 }
@@ -3702,6 +3723,12 @@ function ageFrom(dob){ if (!dob) return ""; const d = new Date(dob); if (isNaN(d
   const t = new Date(); let a = t.getFullYear() - d.getFullYear();
   const m = t.getMonth() - d.getMonth(); if (m < 0 || (m === 0 && t.getDate() < d.getDate())) a--; return a > 0 ? a : ""; }
 
+const CV_TEMPLATES = ["classic", "modern", "simple"];
+function cvTemplate(){
+  const selected = Store.get("pusha_cv_template", "classic");
+  return CV_TEMPLATES.includes(selected) ? selected : "classic";
+}
+
 function cvDoc(){
   const v = vault;
   const name = v.fullname || "Your full name";
@@ -3717,7 +3744,7 @@ function cvDoc(){
   const contact = [v.phone, v.email, v.address].filter(Boolean).join("  ·  ") || "Add your phone, email and address in the Vault";
   const photo = safePhoto(v.photo);   // a remote or non-raster "photo" is dropped, never rendered
 
-  return `<div class="doc">
+  return `<div class="doc cv-template-${cvTemplate()}">
     <div class="head">
       <div class="meta">
         <h1>${esc(name)}</h1>
@@ -3800,7 +3827,11 @@ function openCV(){
         : `<p class="tiny muted" style="margin:0">${t("notif_ok")}</p>`}
     </div>
     <p class="small muted" style="margin:0 0 12px">${miss.length ? t("cv_howto") : t("cv_howto_ok")}</p>
-    ${cvDoc()}
+    <div class="cv-template-picker" role="group" aria-label="${t("cv_template")}">
+      <span class="tiny muted">${t("cv_template")}</span>
+      ${CV_TEMPLATES.map(name => `<button type="button" class="chip sm${cvTemplate() === name ? " on" : ""}" data-cv-template="${name}" aria-pressed="${cvTemplate() === name}">${t("cv_" + name)}</button>`).join("")}
+    </div>
+    <div id="cvDocument">${cvDoc()}</div>
     <p class="tiny muted" style="margin:10px 0 0">${t("cv_pdf_hint")}</p>
     <div class="btns" style="margin:8px 0 0">
       <button class="btn" id="printCV">${ico("print","sm")} ${t("cv_print")}</button>
@@ -3820,6 +3851,15 @@ function openCV(){
       ? "Your photo is on it. One page, printed or saved as a PDF — send the same file every time."
       : "No photo yet — add one in the Vault tab and it will appear here. A CV without a photo is fine too."}</p>`;
 
+  $$("#sheetBody [data-cv-template]").forEach(button => button.addEventListener("click", () => {
+    if (!Store.set("pusha_cv_template", button.dataset.cvTemplate)) storageFail();
+    $("#cvDocument").innerHTML = cvDoc();
+    $$("#sheetBody [data-cv-template]").forEach(option => {
+      const selected = option.dataset.cvTemplate === cvTemplate();
+      option.classList.toggle("on", selected);
+      option.setAttribute("aria-pressed", String(selected));
+    });
+  }));
   $$("#sheetBody [data-fix]").forEach(b => b.addEventListener("click", () => { closeSheet(); focusField(b.dataset.fix); }));
   $$("#sheetBody [data-del]").forEach(b => b.addEventListener("click", () => {
     const before = cvExtras().slice();
@@ -4614,7 +4654,9 @@ $("#cExport").addEventListener("click", async (e) => {
 
 
 /* Pusha — js/documents.js — encrypted, device-local document storage */
-const LocalDocuments = (function(){
+// `var` avoids a temporal-dead-zone during the single-file build, where all
+// classic scripts share one compiled scope and setLockedUI runs before this file.
+var LocalDocuments = (function(){
   const DB_NAME = "pusha-files";
   const DB_VERSION = 1;
   const STORE_NAME = "files";
@@ -4724,7 +4766,14 @@ const LocalDocuments = (function(){
     const list = $("#filesList");
     const input = $("#filesIn");
     if (!list || !input) return;
-    input.disabled = locked || !hasUnlockedPin();
+    const ready = hasUnlockedPin();
+    input.disabled = !ready;
+    const label = $("#filesAddLabel"), pinButton = $("#filesPin");
+    if (label) label.style.display = ready ? "inline-flex" : "none";
+    if (pinButton) {
+      pinButton.hidden = ready;
+      pinButton.textContent = locked ? t("btn_unlock") : t("files_set_pin");
+    }
     list.replaceChildren();
     if (locked) {
       status(t("files_unlock"), false);
@@ -4739,6 +4788,8 @@ const LocalDocuments = (function(){
       const files = await request(null, "getAll");
       if (locked) return render();
       status(files.length ? t(files.length === 1 ? "files_one" : "files_count").replace("%s", files.length) : t("files_empty"), false);
+      // A new vault has no file key until its first upload. An empty list is not an error.
+      if (!files.length) return;
       const cryptoKey = await key(false);
       const rows = await Promise.all(files.map(async file => ({ file, meta:await decryptMetadata(file, cryptoKey) })));
       rows.sort((a, b) => b.meta.added - a.meta.added);
@@ -4811,6 +4862,18 @@ const LocalDocuments = (function(){
     }
   }
 
+  function readFileBytes(file){
+    if (typeof file.arrayBuffer === "function") return file.arrayBuffer();
+    // Older mobile browsers expose FileReader but not Blob.arrayBuffer().
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(reader.error || new Error("read"));
+      reader.onabort = () => reject(new Error("read"));
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
   async function addFile(file){
     if (file.size > MAX_FILE_BYTES) throw new Error("file-size");
     const existing = await request(null, "getAll");
@@ -4818,7 +4881,7 @@ const LocalDocuments = (function(){
     if (existing.length >= MAX_FILES || used + file.size > MAX_TOTAL_BYTES) throw new Error("quota");
     const cryptoKey = await key(true);
     const iv = crypto.getRandomValues(new Uint8Array(12));
-    const ciphertext = await crypto.subtle.encrypt({ name:"AES-GCM", iv }, cryptoKey, await file.arrayBuffer());
+    const ciphertext = await crypto.subtle.encrypt({ name:"AES-GCM", iv }, cryptoKey, await readFileBytes(file));
     const metaIv = crypto.getRandomValues(new Uint8Array(12));
     const metadata = await crypto.subtle.encrypt(
       { name:"AES-GCM", iv:metaIv },
@@ -4844,7 +4907,7 @@ const LocalDocuments = (function(){
     if (locked) return status(t("files_unlock"), true);
     if (!hasUnlockedPin()) return status(t("files_pin_first"), true);
     status(t("files_saving"), false);
-    let saved = 0, rejected = 0;
+    let saved = 0, rejected = 0, lastError = "";
     for (const file of files) {
       try {
         await addFile(file);
@@ -4852,15 +4915,16 @@ const LocalDocuments = (function(){
       } catch(error) {
         rejected++;
         console.error("Could not save local file", error);
-        if (error && error.message === "file-size") status(t("files_too_large"), true);
-        else if (error && error.message === "quota") status(t("files_limit"), true);
-        else status(t("files_error"), true);
+        if (error && error.message === "file-size") lastError = t("files_too_large");
+        else if (error && error.message === "quota") lastError = t("files_limit");
+        else lastError = t("files_error");
       }
     }
     await render();
+    if (rejected) status(lastError, true);
     if (saved && rejected) toast(t("files_partial").replace("%s", saved).replace("%d", rejected));
     else if (saved) toast(t("files_saved").replace("%s", saved));
-    else if (rejected) toast(t("files_error"));
+    else if (rejected) toast(lastError);
   }
 
   async function dropUnusedKey(){
@@ -4934,6 +4998,8 @@ const LocalDocuments = (function(){
     });
   }
 
+  const pinButton = $("#filesPin");
+  if (pinButton) pinButton.addEventListener("click", () => lockSheet(locked ? "unlock" : "set"));
   const input = $("#filesIn");
   if (input) input.addEventListener("change", async () => {
     const files = Array.from(input.files || []);
@@ -5252,7 +5318,8 @@ function lockSheet(mode){
         await calibrate();
         syncVaultFields();
         const made = await enc.encrypt(vault, pin, kdfIter);
-        Store.set("pusha_vault", made.blob); vaultPin = made.holder;
+        if (!Store.set("pusha_vault", made.blob)) { storageFail(); return toast(t("toast_nosave")); }
+        vaultPin = made.holder;
         locked = false; fillVault(); setLockedUI();
         if (typeof bkNoteUpdate === "function") bkNoteUpdate();
         closeSheet(); toast(t("toast_pin_set"));

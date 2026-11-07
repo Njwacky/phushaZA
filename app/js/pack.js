@@ -343,6 +343,7 @@ function applyLang(){
   document.documentElement.toggleAttribute("data-lang-not-en", LANG !== "en");
   [renderBlocks, () => { try { showBlock(activeBlock, false, true); } catch(e){} },
    renderMyIdeas, renderIdeas, renderCVThumb, renderCVBanner, renderMoney, renderPlan,
+   () => { if (typeof renderLocalDocuments === "function") renderLocalDocuments(); },
    () => { try { renderIdInfo(); renderDocs(); } catch(e){} }]
     .forEach(fn => { try { fn(); } catch(e){} });
 }
