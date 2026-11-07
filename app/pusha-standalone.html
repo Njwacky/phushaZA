@@ -2630,6 +2630,7 @@ function toastAction(msg, label, fn){
 const LANGS = [["en","English","EN"],["zu","isiZulu","ZU"],["st","Sesotho","ST"],["nr","isiNdebele","NR"]];
 const I18N = {
 en:{
+ pdf_duplicate:"This PDF is already in your pack. Remove all its pages to add it again.",pdf_vault_all_added:"All saved PDFs are already in your pack. Remove all pages of a file to add it again.",
  pdf_add_vault:"Add from Vault",pdf_vault_empty:"No PDFs saved in your Vault yet.",pdf_vault_choose:"Choose a saved PDF:",
  pdf_title:"Combine CV & PDFs",pdf_card_hint:"Add your CV and PDFs, arrange the pages, and save one PDF.",pdf_open:"Build my PDF pack",pdf_add_cv:"Add my Pusha CV",pdf_add_files:"Add PDF files",pdf_order:"Page order",pdf_empty:"No pages yet. Add your CV or a PDF.",pdf_up:"Move up",pdf_down:"Move down",pdf_remove:"Remove",pdf_save:"Download combined PDF",pdf_close:"Close",pdf_busy:"Working on your phone…",pdf_privacy:"Files are processed on this device, not uploaded. The downloaded PDF is not PIN-encrypted. Your CV is added as an image.",pdf_limits:"Up to 10 MB per PDF, 25 MB total and 100 pages. Password-protected PDFs cannot be merged. Signatures and form fields may not be preserved.",pdf_bad:"Could not open this PDF. It may be damaged or password-protected.",pdf_large:"This PDF is larger than 10 MB.",pdf_limit:"The pack is limited to 25 MB and 100 pages.",pdf_error:"Could not create the PDF. Please try again.",pdf_cv:"Pusha CV",pdf_page:"page",pdf_ready:"Pages ready",pdf_no_pages:"Add at least one page first.",pdf_cv_added:"Your CV is already in the pack.",pdf_cv_long:"Your CV is too long to add. Shorten it and try again.",pdf_done:"Your PDF is ready. Check the downloaded file before sending.",
  files_set_pin:"Set a PIN to add files",cv_template:"CV template",cv_classic:"Classic",cv_modern:"Modern",cv_simple:"Simple",
@@ -2771,6 +2772,7 @@ lock_pin_again:"Type the PIN again",
 
 ct_title:"Spotted a mistake? Tell us",ct_call:"Call or SMS",ct_mail:"Email",ct_note:"Free to message. Nothing is sent unless you tap.",fb_send_email:"Send it by email",ct_wa_note:"Send us a message — free",fb_send_wa:"Send on WhatsApp",ios_title:"Keep this on your iPhone",ios_body:"iPhone deletes a website's saved details after 7 days without a visit. On the home screen it does not.",ios_step1:"Tap Share at the bottom of Safari.",ios_step2:"Choose “Add to Home Screen”, then open Pusha from the new icon.",ios_ok:"Got it",ios_backup:"Save a backup",ios_later:"Not now"},
 zu:{
+ pdf_duplicate:"Le PDF isivele isephaketheni lakho. Susa wonke amakhasi ayo ukuze uyifake futhi.",pdf_vault_all_added:"Wonke ama-PDF agciniwe asephaketheni lakho. Susa wonke amakhasi efayela ukuze ulifake futhi.",
  pdf_add_vault:"Faka okuvela kuVault",pdf_vault_empty:"Awekho ama-PDF agcinwe kuVault.",pdf_vault_choose:"Khetha i-PDF egciniwe:",
  pdf_title:"Hlanganisa i-CV nama-PDF",pdf_card_hint:"Faka i-CV nama-PDF, hlela amakhasi bese ugcina i-PDF eyodwa.",pdf_open:"Yenza iphakethe le-PDF",pdf_add_cv:"Faka i-CV yami yePusha",pdf_add_files:"Faka amafayela e-PDF",pdf_order:"Ukuhleleka kwamakhasi",pdf_empty:"Awekho amakhasi. Faka i-CV noma i-PDF.",pdf_up:"Hambisa phezulu",pdf_down:"Hambisa phansi",pdf_remove:"Susa",pdf_save:"Dawuniloda i-PDF",pdf_close:"Vala",pdf_busy:"Kusalungiswa kule foni…",pdf_privacy:"Amafayela asetshenzwa kule foni, awathunyelwa. I-PDF elandiwe ayivikelwe nge-PIN. I-CV ifakwa njengesithombe.",pdf_limits:"Ifayela ngalinye: 10 MB; isamba: 25 MB namakhasi 100. Ama-PDF anephasiwedi awasebenzi. Amasiginesha nezinkambu zamafomu zingase zingagcinwa.",pdf_bad:"Le PDF ayivuleki. Kungenzeka yonakele noma inephasiwedi.",pdf_large:"Le PDF ingaphezu kuka-10 MB.",pdf_limit:"Umkhawulo ngu-25 MB namakhasi 100.",pdf_error:"I-PDF ayenziwanga. Zama futhi.",pdf_cv:"I-CV yePusha",pdf_page:"ikhasi",pdf_ready:"Amakhasi alungile",pdf_no_pages:"Faka okungenani ikhasi elilodwa.",pdf_cv_added:"I-CV yakho isivele ikhona.",pdf_cv_long:"I-CV yinde kakhulu. Yifinyeze uzame futhi.",pdf_done:"I-PDF isilungile. Yihlole ngaphambi kokuyithumela.",
  files_set_pin:"Setha i-PIN ukufaka amafayela",cv_template:"Isifanekiso se-CV",cv_classic:"Okwakudala",cv_modern:"Okwesimanje",cv_simple:"Okulula",
@@ -2914,6 +2916,7 @@ lock_pin_again:"Bhala i-PIN futhi",
 
 ct_title:"Ubonile iphutha? Sitshele",ct_call:"Shayela noma thumela i-SMS",ct_mail:"I-imeyili",ct_note:"Kumahhala ukuthumela umlayezo. Akukho okuthunyelwayo ngaphandle kokuthi ucofe.",fb_send_email:"Yithumele nge-imeyili",ct_wa_note:"Sithumelele umlayezo — kumahhala",fb_send_wa:"Thumela nge-WhatsApp",ios_title:"Gcina lokhu ku-iPhone yakho",ios_body:"I-iPhone isusa imininingwane egciniwe yewebhusayithi ngemva kwezinsuku ezi-7 ngaphandle kokuvakasha. Esikrinini sasekhaya ayikwenzi lokho.",ios_step1:"Thinta u-Share ngezansi kwe-Safari.",ios_step2:"Khetha “Add to Home Screen”, bese uvula i-Pusha kusithonjana esisha.",ios_ok:"Ngizwile",ios_backup:"Gcina ikhophi",ios_later:"Hhayi manje"},
 st:{
+ pdf_duplicate:"PDF ena e se e le paketeng ya hao. Tlosa maqephe ohle a yona ho e kenya hape.",pdf_vault_all_added:"Di-PDF tsohle tse bolokilweng di se di le paketeng ya hao. Tlosa maqephe ohle a faele ho e kenya hape.",
  pdf_add_vault:"Kenya ho tswa ho Vault",pdf_vault_empty:"Ha ho di-PDF tse bolokilweng ho Vault.",pdf_vault_choose:"Kgetha PDF e bolokilweng:",
  pdf_title:"Kopanya CV le di-PDF",pdf_card_hint:"Kenya CV le di-PDF, hlophisa maqephe mme o boloke PDF e le nngwe.",pdf_open:"Etsa pakete ya PDF",pdf_add_cv:"Kenya CV ya ka ya Pusha",pdf_add_files:"Kenya difaele tsa PDF",pdf_order:"Tatelano ya maqephe",pdf_empty:"Ha ho maqephe. Kenya CV kapa PDF.",pdf_up:"Isa hodimo",pdf_down:"Isa tlase",pdf_remove:"Tlosa",pdf_save:"Jarolla PDF e kopantsweng",pdf_close:"Kwala",pdf_busy:"E sebetsa fonong ena…",pdf_privacy:"Difaele di sebetswa fonong ena, ha di romelwe. PDF e jarollotsweng ha e a sireletswa ka PIN. CV e kenngwa e le setshwantsho.",pdf_limits:"Ho fihla ho 10 MB faeleng, 25 MB kaofela le maqephe a 100. Di-PDF tse nang le phasewete ha di sebetse. Mesaeno le dikarolo tsa diforomo di ka nna tsa se bolokwe.",pdf_bad:"PDF ena ha e bulehe. E ka nna ya senyeha kapa ya ba le phasewete.",pdf_large:"PDF ena e feta 10 MB.",pdf_limit:"Moedi ke 25 MB le maqephe a 100.",pdf_error:"PDF ha e a etswa. Leka hape.",pdf_cv:"CV ya Pusha",pdf_page:"leqephe",pdf_ready:"Maqephe a lokile",pdf_no_pages:"Kenya bonyane leqephe le le leng.",pdf_cv_added:"CV ya hao e se e le teng.",pdf_cv_long:"CV e telele haholo. E kgutsufatse o leke hape.",pdf_done:"PDF e lokile. E hlahlobe pele o e romela.",
  files_set_pin:"Beha PIN ho kenya difaele",cv_template:"Sebopeho sa CV",cv_classic:"Tlwaelehileng",cv_modern:"Sejwalejwale",cv_simple:"Bonolo",
@@ -3057,6 +3060,7 @@ lock_pin_again:"Ngola PIN hape",
 
 ct_title:"O bone phoso? Re bolelle",ct_call:"Letsa kapa romela SMS",ct_mail:"Imeile",ct_note:"Ho lokolohile ho romela molaetsa. Ha ho se romelwang ntle le ha o tobetsa.",fb_send_email:"E romele ka imeile",ct_wa_note:"Re romele molaetsa — mahala",fb_send_wa:"Romela ka WhatsApp",ios_title:"Boloka sena ho iPhone ya hao",ios_body:"iPhone e hlakola dintlha tse bolokilweng tsa webosaete ka mora matsatsi a 7 ntle le ho e etela. Skrineng sa hae ha e etse jwalo.",ios_step1:"Tobetsa Share ka tlase ho Safari.",ios_step2:"Kgetha “Add to Home Screen”, ebe o bula Pusha ho ikhone e ntjha.",ios_ok:"Ke utlwile",ios_backup:"Boloka backup",ios_later:"E seng jwale"},
 nr:{
+ pdf_duplicate:"I-PDF le seyisephaketheni lakho. Susa woke amakhasi wayo ukuyifaka godu.",pdf_vault_all_added:"Woke ama-PDF agciniweko asephaketheni lakho. Susa woke amakhasi wefayela ukulifaka godu.",
  pdf_add_vault:"Faka okuvela kuVault",pdf_vault_empty:"Akunama-PDF agcinwe kuVault.",pdf_vault_choose:"Khetha i-PDF egciniweko:",
  pdf_title:"Hlanganisa i-CV nama-PDF",pdf_card_hint:"Faka i-CV nama-PDF, hlela amakhasi bese ugcina i-PDF eyodwa.",pdf_open:"Yenza iphakethe le-PDF",pdf_add_cv:"Faka i-CV yami yePusha",pdf_add_files:"Faka amafayela we-PDF",pdf_order:"Ukuhleleka kwamakhasi",pdf_empty:"Akunamakhasi. Faka i-CV namkha i-PDF.",pdf_up:"Yisa phezulu",pdf_down:"Yisa phasi",pdf_remove:"Susa",pdf_save:"Dawuniloda i-PDF",pdf_close:"Vala",pdf_busy:"Kusalungiswa efonini le…",pdf_privacy:"Amafayela asetjenzwa efonini le, awathunyelwa. I-PDF elandiweko ayivikelwa nge-PIN. I-CV ifakwa njengesithombe.",pdf_limits:"Ifayela ngalinye: 10 MB; koke: 25 MB namakhasi 100. Ama-PDF anephasiwedi awasebenzi. Amasiginitjha neenkambu zamaforomo kungenzeka zingagcinwa.",pdf_bad:"I-PDF le ayivuleki. Kungenzeka yonakele namkha inephasiwedi.",pdf_large:"I-PDF le ingaphezu kwe-10 MB.",pdf_limit:"Umkhawulo yi-25 MB namakhasi 100.",pdf_error:"I-PDF ayenziwanga. Linga godu.",pdf_cv:"I-CV yePusha",pdf_page:"ikhasi",pdf_ready:"Amakhasi alungile",pdf_no_pages:"Faka ikhasi elilodwa okungani.",pdf_cv_added:"I-CV yakho seyikhona.",pdf_cv_long:"I-CV yinde khulu. Yifinyeze ulinge godu.",pdf_done:"I-PDF ilungile. Yihlole ngaphambi kokuyithumela.",
  files_set_pin:"Setha i-PIN ukufaka amafayela",cv_template:"Isifanekiso se-CV",cv_classic:"Sakade",cv_modern:"Sesimanje",cv_simple:"Esilula",
@@ -5762,10 +5766,10 @@ function openDiy(id){
 /* Pusha — offline PDF pack builder. Temporary data is never sent or persisted. */
 var PdfPack = (function(){
   const MAX_FILE = 10 * 1024 * 1024, MAX_TOTAL = 25 * 1024 * 1024, MAX_PAGES = 100;
-  let pages = [], token = 0, busy = false;
+  let pages = [], vaultRows = null, token = 0, busy = false;
 
   function clear(){
-    pages = []; busy = false; token++;
+    pages = []; vaultRows = null; busy = false; token++;
     // Drop DOM listeners too: they close over source PDF documents.
     const list = $("#pdfPackList"), vaultList = $("#pdfVaultList");
     if (list) list.replaceChildren();
@@ -5779,7 +5783,16 @@ var PdfPack = (function(){
   }
   function pageLabel(page){ return page.name + " · " + t("pdf_page") + " " + (page.index + 1); }
   function totalSize(){ return [...new Set(pages.map(page => page.source))].reduce((sum, source) => sum + source.size, 0); }
+  function selectedVaultIds(){
+    return new Set(pages.flatMap(page => page.source.vaultIds || []));
+  }
+  function sameBytes(a, b){
+    if (!a || a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+    return true;
+  }
   function updateControls(){
+    renderVaultChoices();
     ["pdfPackAddCV", "pdfPackAddFiles", "pdfPackAddVault", "pdfPackSave"].forEach(id => { const el = $("#" + id); if (el) el.disabled = busy || (id === "pdfPackSave" && !pages.length); });
     const list = $("#pdfPackList"); if (!list) return;
     list.replaceChildren();
@@ -5827,9 +5840,17 @@ var PdfPack = (function(){
         let reason = "";
         try {
           if (file.size > MAX_FILE) throw new Error("large");
-          if (totalSize() + file.size > MAX_TOTAL) throw new Error("limit");
           const bytes = new Uint8Array(await readFile(file));
           if (!active(id)) return;
+          // Compare actual contents, not names: the same PDF can be selected from
+          // the device or Vault under different names. Keep a source selected as
+          // long as any of its pages remain in the pack.
+          const duplicate = [...new Set(pages.map(page => page.source))].find(source => sameBytes(source.bytes, bytes));
+          if (duplicate) {
+            if (file.vaultId != null && !duplicate.vaultIds.includes(file.vaultId)) duplicate.vaultIds.push(file.vaultId);
+            throw new Error("duplicate");
+          }
+          if (totalSize() + file.size > MAX_TOTAL) throw new Error("limit");
           // Do not trust the extension or MIME type selected by the browser.
           const header = new TextDecoder("latin1").decode(bytes.slice(0, 1024));
           if (!header.includes("%PDF-")) throw new Error("bad");
@@ -5838,10 +5859,10 @@ var PdfPack = (function(){
           if (!count) throw new Error("bad");
           if (pages.length + count > MAX_PAGES) throw new Error("limit");
           if (!active(id)) return;
-          const source = { doc, size:file.size, kind:"file" };
+          const source = { doc, bytes, size:file.size, kind:"file", vaultIds:file.vaultId == null ? [] : [file.vaultId] };
           for (let i = 0; i < count; i++) pages.push({ source, index:i, name:file.name.slice(0, 180) });
         } catch(error){
-          reason = error.message === "large" ? t("pdf_large") : error.message === "limit" ? t("pdf_limit") : t("pdf_bad");
+          reason = error.message === "large" ? t("pdf_large") : error.message === "limit" ? t("pdf_limit") : error.message === "duplicate" ? t("pdf_duplicate") : t("pdf_bad");
           errors.push(file.name.slice(0, 180) + ": " + reason);
         }
       }
@@ -5849,32 +5870,42 @@ var PdfPack = (function(){
     } finally { if (active(id)) setBusy(false); }
   }
 
+  // Only hide choices in the pack builder; the actual encrypted Vault is never changed.
+  // Removing the last page of a file makes it available to select again.
+  function renderVaultChoices(){
+    const list = $("#pdfVaultList");
+    if (!list || vaultRows === null) return;
+    list.replaceChildren();
+    const selected = selectedVaultIds();
+    const available = vaultRows.filter(row => !selected.has(row.id));
+    const label = document.createElement("p"); label.className = "small muted";
+    label.textContent = !vaultRows.length ? t("pdf_vault_empty") : !available.length ? t("pdf_vault_all_added") : t("pdf_vault_choose");
+    list.appendChild(label);
+    const id = token;
+    available.forEach(row => {
+      const button = document.createElement("button"); button.type = "button"; button.className = "btn sm ghost pdf-vault-file";
+      button.textContent = row.name; button.disabled = busy;
+      button.addEventListener("click", async () => {
+        if (busy || !active(id) || selectedVaultIds().has(row.id)) return;
+        setBusy(true); message(t("pdf_busy"));
+        try {
+          const file = await LocalDocuments.readPdf(row.id);
+          if (!active(id)) return;
+          setBusy(false);
+          await addFiles([{name:file.name, size:file.bytes.byteLength, vaultId:row.id, arrayBuffer:() => Promise.resolve(file.bytes)}]);
+        } catch(error) { if (active(id)) message(t("files_error"), true); }
+        finally { if (active(id)) setBusy(false); }
+      });
+      list.appendChild(button);
+    });
+  }
   async function chooseVault(){
     if (busy || locked) return;
     const id = token; setBusy(true); message(t("pdf_busy"));
     try {
       const rows = await LocalDocuments.listPdfs();
       if (!active(id)) return;
-      const list = $("#pdfVaultList"); list.replaceChildren();
-      if (!rows.length) return message(t("pdf_vault_empty"));
-      const label = document.createElement("p"); label.className = "small muted"; label.textContent = t("pdf_vault_choose"); list.appendChild(label);
-      rows.forEach(row => {
-        const button = document.createElement("button"); button.type = "button"; button.className = "btn sm ghost pdf-vault-file";
-        button.textContent = row.name;
-        button.addEventListener("click", async () => {
-          if (busy || !active(id)) return;
-          setBusy(true); message(t("pdf_busy"));
-          try {
-            const file = await LocalDocuments.readPdf(row.id);
-            if (!active(id)) return;
-            list.replaceChildren();
-            setBusy(false);
-            await addFiles([{name:file.name, size:file.bytes.byteLength, arrayBuffer:() => Promise.resolve(file.bytes)}]);
-          } catch(error) { if (active(id)) message(t("files_error"), true); }
-          finally { if (active(id)) setBusy(false); }
-        });
-        list.appendChild(button);
-      });
+      vaultRows = rows;
       message("");
     } catch(error) { if (active(id)) message(error.message === "locked" ? t("files_pin_first") : t("files_error"), true); }
     finally { if (active(id)) setBusy(false); }

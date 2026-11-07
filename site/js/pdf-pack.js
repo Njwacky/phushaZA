@@ -1,10 +1,10 @@
 /* Pusha — offline PDF pack builder. Temporary data is never sent or persisted. */
 var PdfPack = (function(){
   const MAX_FILE = 10 * 1024 * 1024, MAX_TOTAL = 25 * 1024 * 1024, MAX_PAGES = 100;
-  let pages = [], token = 0, busy = false;
+  let pages = [], vaultRows = null, token = 0, busy = false;
 
   function clear(){
-    pages = []; busy = false; token++;
+    pages = []; vaultRows = null; busy = false; token++;
     // Drop DOM listeners too: they close over source PDF documents.
     const list = $("#pdfPackList"), vaultList = $("#pdfVaultList");
     if (list) list.replaceChildren();
@@ -18,7 +18,16 @@ var PdfPack = (function(){
   }
   function pageLabel(page){ return page.name + " · " + t("pdf_page") + " " + (page.index + 1); }
   function totalSize(){ return [...new Set(pages.map(page => page.source))].reduce((sum, source) => sum + source.size, 0); }
+  function selectedVaultIds(){
+    return new Set(pages.flatMap(page => page.source.vaultIds || []));
+  }
+  function sameBytes(a, b){
+    if (!a || a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+    return true;
+  }
   function updateControls(){
+    renderVaultChoices();
     ["pdfPackAddCV", "pdfPackAddFiles", "pdfPackAddVault", "pdfPackSave"].forEach(id => { const el = $("#" + id); if (el) el.disabled = busy || (id === "pdfPackSave" && !pages.length); });
     const list = $("#pdfPackList"); if (!list) return;
     list.replaceChildren();
@@ -66,9 +75,17 @@ var PdfPack = (function(){
         let reason = "";
         try {
           if (file.size > MAX_FILE) throw new Error("large");
-          if (totalSize() + file.size > MAX_TOTAL) throw new Error("limit");
           const bytes = new Uint8Array(await readFile(file));
           if (!active(id)) return;
+          // Compare actual contents, not names: the same PDF can be selected from
+          // the device or Vault under different names. Keep a source selected as
+          // long as any of its pages remain in the pack.
+          const duplicate = [...new Set(pages.map(page => page.source))].find(source => sameBytes(source.bytes, bytes));
+          if (duplicate) {
+            if (file.vaultId != null && !duplicate.vaultIds.includes(file.vaultId)) duplicate.vaultIds.push(file.vaultId);
+            throw new Error("duplicate");
+          }
+          if (totalSize() + file.size > MAX_TOTAL) throw new Error("limit");
           // Do not trust the extension or MIME type selected by the browser.
           const header = new TextDecoder("latin1").decode(bytes.slice(0, 1024));
           if (!header.includes("%PDF-")) throw new Error("bad");
@@ -77,10 +94,10 @@ var PdfPack = (function(){
           if (!count) throw new Error("bad");
           if (pages.length + count > MAX_PAGES) throw new Error("limit");
           if (!active(id)) return;
-          const source = { doc, size:file.size, kind:"file" };
+          const source = { doc, bytes, size:file.size, kind:"file", vaultIds:file.vaultId == null ? [] : [file.vaultId] };
           for (let i = 0; i < count; i++) pages.push({ source, index:i, name:file.name.slice(0, 180) });
         } catch(error){
-          reason = error.message === "large" ? t("pdf_large") : error.message === "limit" ? t("pdf_limit") : t("pdf_bad");
+          reason = error.message === "large" ? t("pdf_large") : error.message === "limit" ? t("pdf_limit") : error.message === "duplicate" ? t("pdf_duplicate") : t("pdf_bad");
           errors.push(file.name.slice(0, 180) + ": " + reason);
         }
       }
@@ -88,32 +105,42 @@ var PdfPack = (function(){
     } finally { if (active(id)) setBusy(false); }
   }
 
+  // Only hide choices in the pack builder; the actual encrypted Vault is never changed.
+  // Removing the last page of a file makes it available to select again.
+  function renderVaultChoices(){
+    const list = $("#pdfVaultList");
+    if (!list || vaultRows === null) return;
+    list.replaceChildren();
+    const selected = selectedVaultIds();
+    const available = vaultRows.filter(row => !selected.has(row.id));
+    const label = document.createElement("p"); label.className = "small muted";
+    label.textContent = !vaultRows.length ? t("pdf_vault_empty") : !available.length ? t("pdf_vault_all_added") : t("pdf_vault_choose");
+    list.appendChild(label);
+    const id = token;
+    available.forEach(row => {
+      const button = document.createElement("button"); button.type = "button"; button.className = "btn sm ghost pdf-vault-file";
+      button.textContent = row.name; button.disabled = busy;
+      button.addEventListener("click", async () => {
+        if (busy || !active(id) || selectedVaultIds().has(row.id)) return;
+        setBusy(true); message(t("pdf_busy"));
+        try {
+          const file = await LocalDocuments.readPdf(row.id);
+          if (!active(id)) return;
+          setBusy(false);
+          await addFiles([{name:file.name, size:file.bytes.byteLength, vaultId:row.id, arrayBuffer:() => Promise.resolve(file.bytes)}]);
+        } catch(error) { if (active(id)) message(t("files_error"), true); }
+        finally { if (active(id)) setBusy(false); }
+      });
+      list.appendChild(button);
+    });
+  }
   async function chooseVault(){
     if (busy || locked) return;
     const id = token; setBusy(true); message(t("pdf_busy"));
     try {
       const rows = await LocalDocuments.listPdfs();
       if (!active(id)) return;
-      const list = $("#pdfVaultList"); list.replaceChildren();
-      if (!rows.length) return message(t("pdf_vault_empty"));
-      const label = document.createElement("p"); label.className = "small muted"; label.textContent = t("pdf_vault_choose"); list.appendChild(label);
-      rows.forEach(row => {
-        const button = document.createElement("button"); button.type = "button"; button.className = "btn sm ghost pdf-vault-file";
-        button.textContent = row.name;
-        button.addEventListener("click", async () => {
-          if (busy || !active(id)) return;
-          setBusy(true); message(t("pdf_busy"));
-          try {
-            const file = await LocalDocuments.readPdf(row.id);
-            if (!active(id)) return;
-            list.replaceChildren();
-            setBusy(false);
-            await addFiles([{name:file.name, size:file.bytes.byteLength, arrayBuffer:() => Promise.resolve(file.bytes)}]);
-          } catch(error) { if (active(id)) message(t("files_error"), true); }
-          finally { if (active(id)) setBusy(false); }
-        });
-        list.appendChild(button);
-      });
+      vaultRows = rows;
       message("");
     } catch(error) { if (active(id)) message(error.message === "locked" ? t("files_pin_first") : t("files_error"), true); }
     finally { if (active(id)) setBusy(false); }
