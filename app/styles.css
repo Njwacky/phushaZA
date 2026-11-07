@@ -334,7 +334,8 @@ html[data-theme="dark"] .tile.grow{background:#1a2c13;color:#9ed67a}
 .doc .ph{width:76px;height:76px;border-radius:9px;overflow:hidden;background:#eef3f0;flex:0 0 auto;
   display:grid;place-items:center;color:#0b5c46}
 .doc .ph img{width:100%;height:100%;object-fit:cover}
-.doc .contact{font:12px/1.6 -apple-system,"Segoe UI",Inter,Arial,sans-serif;color:#33403b}
+.doc .contact{font:12px/1.6 -apple-system,"Segoe UI",Inter,Arial,sans-serif;color:#33403b;
+  display:block;min-height:0;padding:0;border:0;border-radius:0;background:transparent}
 .doc .pillrow{display:flex;flex-wrap:wrap;gap:5px;margin:2px 0 0}
 .doc .pillrow span{font:700 10.5px/1 -apple-system,"Segoe UI",Inter,Arial,sans-serif;background:#eef3f0;color:#0b5c46;
   border-radius:5px;padding:4px 7px}
@@ -622,3 +623,15 @@ a.res .rt .icon{color:var(--brand)}
 .ctval{font-size:13px;color:var(--muted);overflow-wrap:anywhere}
 .ctic.wa{background:rgba(37,211,102,.14);color:#1a7f4b}
 html[data-theme="dark"] .ctic.wa{background:rgba(37,211,102,.18);color:#5ee39b}
+
+/* PDF pack: page-level ordering works with touch, keyboard and screen readers. */
+.pdf-pack-actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.pdf-pack-actions .btn{width:auto;flex:1;min-width:150px}
+.pdf-pack-list{list-style:none;padding:0;margin:8px 0 14px;display:grid;gap:8px}
+.pdf-pack-page{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--bg-2)}
+.pdf-pack-name{display:block;font-weight:700;overflow-wrap:anywhere;font-size:13px}
+.pdf-page-controls{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.pdf-page-controls .btn{width:auto;min-height:40px}
+.pdf-pack-status{min-height:1.5em;overflow-wrap:anywhere;white-space:pre-line}
+
+.pdf-vault-file{width:100%;justify-content:flex-start;margin:0 0 6px;overflow-wrap:anywhere}

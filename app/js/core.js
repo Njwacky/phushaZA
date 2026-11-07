@@ -195,7 +195,7 @@ function checkSAID(raw){
 }
 
 
-const PUSHA_VERSION = "2.8";
+const PUSHA_VERSION = "2.9";
 
 /* ---------- 3b. SAYING IT OUT LOUD WHEN A SAVE FAILS ---------- */
 function storageFail(){

@@ -35,7 +35,7 @@ var LocalDocuments = (function(){
     const db = await openDB();
     return new Promise((resolve, reject) => {
       let result;
-      const tx = db.transaction(STORE_NAME, method === "getAll" || method === "count" ? "readonly" : "readwrite");
+      const tx = db.transaction(STORE_NAME, method === "getAll" || method === "get" || method === "count" ? "readonly" : "readwrite");
       const objectStore = tx.objectStore(STORE_NAME);
       const req = value === undefined ? objectStore[method]() : objectStore[method](value);
       req.onsuccess = () => { result = req.result; };
@@ -283,6 +283,34 @@ var LocalDocuments = (function(){
     return (await request(null, "count")) > 0;
   }
 
+  function isPdf(meta){
+    return !!(meta && (/\.pdf$/i.test(meta.name || "") || String(meta.type || "").toLowerCase() === "application/pdf"));
+  }
+
+  // These methods are deliberately available only while the encrypted Vault is
+  // unlocked. PDF pack uses decrypted copies in memory and never alters records.
+  async function listPdfs(){
+    if (!hasUnlockedPin()) throw new Error("locked");
+    const files = await request(null, "getAll");
+    if (!files.length) return [];
+    const cryptoKey = await key(false);
+    const rows = await Promise.all(files.map(async file => ({id:file.id, meta:await decryptMetadata(file, cryptoKey)})));
+    if (!hasUnlockedPin()) throw new Error("locked");
+    return rows.filter(row => isPdf(row.meta)).map(row => ({id:row.id, name:row.meta.name, added:row.meta.added})).sort((a,b) => b.added - a.added);
+  }
+
+  async function readPdf(id){
+    if (!hasUnlockedPin()) throw new Error("locked");
+    const file = await request(null, "get", id);
+    if (!file) throw new Error("missing");
+    const cryptoKey = await key(false);
+    const meta = await decryptMetadata(file, cryptoKey);
+    if (!isPdf(meta)) throw new Error("not-pdf");
+    const bytes = await crypto.subtle.decrypt({name:"AES-GCM", iv:new Uint8Array(file.iv)}, cryptoKey, file.ciphertext);
+    if (!hasUnlockedPin()) throw new Error("locked");
+    return {name:meta.name, bytes};
+  }
+
   function backupRecords(){
     return request(null, "getAll").then(files => files.map(file => ({
       name:file.name,
@@ -354,6 +382,8 @@ var LocalDocuments = (function(){
   render();
   return {
     hasFiles,
+    listPdfs,
+    readPdf,
     render,
     backupRecords,
     cleanBackupRecords,

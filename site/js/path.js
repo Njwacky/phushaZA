@@ -138,6 +138,7 @@ document.addEventListener("visibilitychange", () => {
 });
 
 function lockNow(){
+  if (typeof PdfPack !== "undefined" && PdfPack) { PdfPack.clear(); if ($("#pdfPackList")) closeSheet(); }
   vault = {}; vaultPin = null; locked = true;
   VAULT_FIELDS.forEach(k => { const el = $("#f_" + k); if (el) el.value = ""; });
   fillVault(); setLockedUI();

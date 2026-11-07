@@ -19,7 +19,7 @@ const SRC = __dirname;
 const OUT = path.resolve(SRC, "..", process.argv[2] || "site");
 
 const FILES = [
-  "index.html", "styles.css", "theme.js", "manifest.webmanifest", "sw.js"
+  "index.html", "styles.css", "theme.js", "manifest.webmanifest", "sw.js", "THIRD-PARTY-NOTICES.txt"
 ];
 const DIRS = { js: "*.js", img: "*.jpg" };   // icons are copied by reference, below
 

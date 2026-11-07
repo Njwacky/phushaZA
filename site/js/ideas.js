@@ -171,6 +171,7 @@ function openSheet(){
   if (first) setTimeout(() => { try { first.focus({ preventScroll:true }); } catch(e){} }, 40);
 }
 function closeSheet(){
+  if (typeof PdfPack !== "undefined" && PdfPack) PdfPack.clear();
   $("#sheet").classList.remove("on");
   document.body.style.overflow = "";
   const back = sheetReturnFocus; sheetReturnFocus = null;

@@ -243,6 +243,12 @@
     </div>
 
     <div class="card">
+      <h3 data-i18n="pdf_title">Combine CV &amp; PDFs</h3>
+      <p class="small muted" data-i18n="pdf_card_hint">Add your CV and PDFs, arrange the pages, and save one PDF.</p>
+      <button class="btn ghost" id="openPdfPack" type="button"><span data-i18n="pdf_open">Build my PDF pack</span></button>
+    </div>
+
+    <div class="card">
       <div class="row" style="justify-content:space-between">
         <h3 style="margin:0" data-i18n="p_sheet">Detail sheet</h3>
         <button class="btn sm" id="printSheet"><svg class="icon sm"><use href="#i-print"/></svg> <span data-i18n="btn_print">Print / PDF</span></button>
@@ -394,6 +400,9 @@
 
 <div class="printable" id="printArea"></div>
 
+<!-- PDF tools are bundled locally for offline, device-only processing. -->
+<script src="js/pdf-lib.min.js"></script>
+<script src="js/html2canvas.min.js"></script>
 <!-- 1. data-ideas -->
 <script src="js/data-ideas.js"></script>
 <!-- 2. data-learn -->
@@ -423,5 +432,6 @@
 <script src="js/diy.js"></script>
 <script src="js/hint-resize.js"></script>
 <script src="js/hint-ios.js"></script>
+<script src="js/pdf-pack.js"></script>
 </body>
 </html>

@@ -5,12 +5,12 @@ no account, no tracking. Open `index.html` and it works.
 
 ```
 app/
-├── index.html              the markup only (~24 KB) — loads the sixteen files in js/
+├── index.html              the markup only (~24 KB) — loads the scripts in js/
 ├── styles.css              all styling: tokens, light/dark, the desktop tier,
 │                           print (A4)                                    (~29 KB)
 ├── theme.js                tiny <head> script that sets the colour scheme
 │                           before paint (stops the white flash)          (<1 KB)
-├── js/                     all behaviour, sixteen files
+├── js/                     all behaviour and local PDF libraries
 │   ├── data-ideas.js 42 KB   the 31 ideas — pure data
 │   ├── data-learn.js 31 KB   resources, learning steps, the method
 │   ├── core.js        9 KB   helpers, storage, theme, nav, SA ID check
@@ -20,6 +20,9 @@ app/
 │   ├── misc.js       10 KB   your own ideas, About
 │   ├── ideas.js      12 KB   list, filters, calculator, quiz
 │   ├── money.js       3 KB   cashbook + goal
+│   ├── pdf-pack.js          offline PDF merging and page ordering
+│   ├── pdf-lib.min.js       local PDF library (MIT)
+│   ├── html2canvas.min.js   local CV image capture (MIT)
 │   ├── documents.js   9 KB   encrypted phone-only file storage and backup
 │   ├── path.js       12 KB   7-day plan, opportunities, scams, PIN lock, boot
 │   ├── data-diy.js   12 KB   the 10 make-and-sell projects — pure data
@@ -41,9 +44,8 @@ app/
 └── MARKET-AND-GROWTH.md    market case, who pays, distribution, moat, risks
 ```
 
-**Script order in `index.html` is load-bearing** — the ten files are classic
-scripts sharing one global scope, so `i18n.js` must come before anything that
-calls `t()`, and `path.js` last. Nothing here needs a bundler.
+**Script order in `index.html` is load-bearing** — the scripts are classic scripts sharing one global scope, so `i18n.js` must come before anything that
+calls `t()`, and the PDF builder must load after its dependencies. Nothing here needs a bundler.
 
 Everything the user sees is in the files above. The only material outside this
 folder is `../research/learning-resources.md` — the note that records which free
@@ -113,6 +115,15 @@ is downloaded for it: it is 29 KB of CSS and one `@media` block.
 | `js/money.js` | cashbook (with delete + Undo and "copy my cashbook"), savings goal |
 | `js/documents.js` | user files encrypted with the Vault PIN in IndexedDB; file data is included in encrypted backup export/import |
 | `js/path.js` | 7-day plan, opportunities, scams, the PIN lock, **auto-lock**, boot |
+
+In **Pack → Build my PDF pack**, add the current Pusha CV and individual PDF files,
+or choose PDFs from the unlocked Vault, move or remove individual pages, then download a single combined PDF. All processing
+is on-device and works offline after the app shell has cached. Uploaded PDFs are
+temporary in-memory working copies, not files saved to the Vault. The downloaded
+PDF is not PIN-encrypted; keep it private. The CV is embedded as an image of the
+selected template (its text is not selectable). PDFs must not be password-protected;
+interactive form fields and digital signatures may not survive merging. Each input
+is limited to 10 MB, with 25 MB of PDF inputs and 100 pages per pack.
 
 The printable CV has three selectable layouts (Classic, Modern and Simple); the selected layout is remembered and used for printing.
 
