@@ -29,7 +29,7 @@ const css   = read("styles.css");
 const theme = read("theme.js");
 
 // every js/ file, in exactly the order index.html loads them
-const JS_ORDER = ["data-ideas","data-learn","data-diy","diy-art","core","i18n","pack","cv-checks","misc","ideas","money","documents","path","diy","hint-resize", "hint-ios"];
+const JS_ORDER = ["pdf-lib.min","html2canvas.min","data-ideas","data-learn","data-diy","diy-art","core","i18n","pack","cv-checks","misc","ideas","money","documents","path","diy","hint-resize", "hint-ios", "pdf-pack"];
 const app = JS_ORDER.map(f => read("js/" + f + ".js")).join("\n\n");
 
 function must(cond, msg){ if (!cond){ console.error("build failed: " + msg); process.exit(1); } }
@@ -41,7 +41,7 @@ must(html.includes('src="js/' + firstJs + '.js"'), 'index.html must load js/' + 
 must(JS_ORDER.every(f => html.indexOf('src="js/' + f + '.js"') !== -1), 'index.html must load every js/ file');
 // and nothing may be loaded that the build does not know about: a file left out
 // of JS_ORDER would silently vanish from the single file
-const loaded = (html.match(/src="js\/[a-z0-9-]+\.js"/g) || []).map(m => m.replace(/^src="js\//, "").replace(/\.js"$/, ""));
+const loaded = (html.match(/src="js\/[a-z0-9.-]+\.js"/g) || []).map(m => m.replace(/^src="js\//, "").replace(/\.js"$/, ""));
 must(loaded.every(f => JS_ORDER.indexOf(f) !== -1), "index.html loads a js/ file missing from JS_ORDER: " + loaded.filter(f => JS_ORDER.indexOf(f) === -1).join(", "));
 must(loaded.length === JS_ORDER.length, "index.html and JS_ORDER disagree on how many js/ files there are");
 must(JS_ORDER.every((f, i, a) => i === 0 || html.indexOf('js/' + a[i-1] + '.js') < html.indexOf('js/' + f + '.js')),
@@ -64,7 +64,7 @@ const out = html
   .replace('<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">', () => "")
   .replace('<link rel="icon" href="icons/icon.svg" sizes="any" type="image/svg+xml">',
            () => '<link rel="icon" href="data:image/svg+xml,' + encodeURIComponent(mark.trim()) + '">')
-  .replace(/<script src="js\/[a-z0-9-]+\.js"><\/script>/g, () => "")
+  .replace(/<script src="js\/[a-z0-9.-]+\.js"><\/script>/g, () => "")
   .replace("</body>", () => "<script>\n" + app.trim() + "\n</script>\n</body>");
 
 must(!out.includes('src="js/'), "unreplaced js/ reference left behind");
