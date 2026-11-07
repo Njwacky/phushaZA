@@ -3,6 +3,7 @@
 const LANGS = [["en","English","EN"],["zu","isiZulu","ZU"],["st","Sesotho","ST"],["nr","isiNdebele","NR"]];
 const I18N = {
 en:{
+ files_set_pin:"Set a PIN to add files",cv_template:"CV template",cv_classic:"Classic",cv_modern:"Modern",cv_simple:"Simple",
  nav_vault:"Vault",nav_pack:"Pack",nav_ideas:"Ideas",nav_money:"Money",nav_path:"Path",
  p_version:"Version",p_var_help:"Pick the one that sounds like you.",
 id_chip:"A4 · about R2 at a library",docs_chip:"Tick what you have",
@@ -141,6 +142,7 @@ lock_pin_again:"Type the PIN again",
 
 ct_title:"Spotted a mistake? Tell us",ct_call:"Call or SMS",ct_mail:"Email",ct_note:"Free to message. Nothing is sent unless you tap.",fb_send_email:"Send it by email",ct_wa_note:"Send us a message — free",fb_send_wa:"Send on WhatsApp",ios_title:"Keep this on your iPhone",ios_body:"iPhone deletes a website's saved details after 7 days without a visit. On the home screen it does not.",ios_step1:"Tap Share at the bottom of Safari.",ios_step2:"Choose “Add to Home Screen”, then open Pusha from the new icon.",ios_ok:"Got it",ios_backup:"Save a backup",ios_later:"Not now"},
 zu:{
+ files_set_pin:"Setha i-PIN ukufaka amafayela",cv_template:"Isifanekiso se-CV",cv_classic:"Okwakudala",cv_modern:"Okwesimanje",cv_simple:"Okulula",
  nav_vault:"Umqulu",nav_pack:"Iphakethe",nav_ideas:"Imibono",nav_money:"Imali",nav_path:"Indlela",
  p_version:"Inguqulo",p_var_help:"Khetha lowo ozwakala njengawe.",
 id_chip:"A4 · cishe R2 emtatsheni wezincwadi",docs_chip:"Beka uphawu kokunakho",
@@ -281,6 +283,7 @@ lock_pin_again:"Bhala i-PIN futhi",
 
 ct_title:"Ubonile iphutha? Sitshele",ct_call:"Shayela noma thumela i-SMS",ct_mail:"I-imeyili",ct_note:"Kumahhala ukuthumela umlayezo. Akukho okuthunyelwayo ngaphandle kokuthi ucofe.",fb_send_email:"Yithumele nge-imeyili",ct_wa_note:"Sithumelele umlayezo — kumahhala",fb_send_wa:"Thumela nge-WhatsApp",ios_title:"Gcina lokhu ku-iPhone yakho",ios_body:"I-iPhone isusa imininingwane egciniwe yewebhusayithi ngemva kwezinsuku ezi-7 ngaphandle kokuvakasha. Esikrinini sasekhaya ayikwenzi lokho.",ios_step1:"Thinta u-Share ngezansi kwe-Safari.",ios_step2:"Khetha “Add to Home Screen”, bese uvula i-Pusha kusithonjana esisha.",ios_ok:"Ngizwile",ios_backup:"Gcina ikhophi",ios_later:"Hhayi manje"},
 st:{
+ files_set_pin:"Beha PIN ho kenya difaele",cv_template:"Sebopeho sa CV",cv_classic:"Tlwaelehileng",cv_modern:"Sejwalejwale",cv_simple:"Bonolo",
  nav_vault:"Polokelo",nav_pack:"Pakete",nav_ideas:"Mehopolo",nav_money:"Chelete",nav_path:"Tsela",
  p_version:"Mofuta",p_var_help:"Kgetha eo e utlwahalang jwaloka wena.",
 id_chip:"A4 · hoo e ka bang R2 laebraring",docs_chip:"Tshwaya seo o nang le sona",
@@ -421,6 +424,7 @@ lock_pin_again:"Ngola PIN hape",
 
 ct_title:"O bone phoso? Re bolelle",ct_call:"Letsa kapa romela SMS",ct_mail:"Imeile",ct_note:"Ho lokolohile ho romela molaetsa. Ha ho se romelwang ntle le ha o tobetsa.",fb_send_email:"E romele ka imeile",ct_wa_note:"Re romele molaetsa — mahala",fb_send_wa:"Romela ka WhatsApp",ios_title:"Boloka sena ho iPhone ya hao",ios_body:"iPhone e hlakola dintlha tse bolokilweng tsa webosaete ka mora matsatsi a 7 ntle le ho e etela. Skrineng sa hae ha e etse jwalo.",ios_step1:"Tobetsa Share ka tlase ho Safari.",ios_step2:"Kgetha “Add to Home Screen”, ebe o bula Pusha ho ikhone e ntjha.",ios_ok:"Ke utlwile",ios_backup:"Boloka backup",ios_later:"E seng jwale"},
 nr:{
+ files_set_pin:"Setha i-PIN ukufaka amafayela",cv_template:"Isifanekiso se-CV",cv_classic:"Sakade",cv_modern:"Sesimanje",cv_simple:"Esilula",
  nav_vault:"Umqulu",nav_pack:"Iphakethe",nav_ideas:"Imibono",nav_money:"Imali",nav_path:"Indlela",
  p_version:"Inguqulo",p_var_help:"Khetha lelo elizwakala njengawe.",
 id_chip:"A4 · cishe R2 lapaebrari",docs_chip:"Tshwaya okunawo",

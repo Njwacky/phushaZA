@@ -1,5 +1,7 @@
 /* Pusha — js/documents.js — encrypted, device-local document storage */
-const LocalDocuments = (function(){
+// `var` avoids a temporal-dead-zone during the single-file build, where all
+// classic scripts share one compiled scope and setLockedUI runs before this file.
+var LocalDocuments = (function(){
   const DB_NAME = "pusha-files";
   const DB_VERSION = 1;
   const STORE_NAME = "files";
@@ -109,7 +111,14 @@ const LocalDocuments = (function(){
     const list = $("#filesList");
     const input = $("#filesIn");
     if (!list || !input) return;
-    input.disabled = locked || !hasUnlockedPin();
+    const ready = hasUnlockedPin();
+    input.disabled = !ready;
+    const label = $("#filesAddLabel"), pinButton = $("#filesPin");
+    if (label) label.style.display = ready ? "inline-flex" : "none";
+    if (pinButton) {
+      pinButton.hidden = ready;
+      pinButton.textContent = locked ? t("btn_unlock") : t("files_set_pin");
+    }
     list.replaceChildren();
     if (locked) {
       status(t("files_unlock"), false);
@@ -124,6 +133,8 @@ const LocalDocuments = (function(){
       const files = await request(null, "getAll");
       if (locked) return render();
       status(files.length ? t(files.length === 1 ? "files_one" : "files_count").replace("%s", files.length) : t("files_empty"), false);
+      // A new vault has no file key until its first upload. An empty list is not an error.
+      if (!files.length) return;
       const cryptoKey = await key(false);
       const rows = await Promise.all(files.map(async file => ({ file, meta:await decryptMetadata(file, cryptoKey) })));
       rows.sort((a, b) => b.meta.added - a.meta.added);
@@ -196,6 +207,18 @@ const LocalDocuments = (function(){
     }
   }
 
+  function readFileBytes(file){
+    if (typeof file.arrayBuffer === "function") return file.arrayBuffer();
+    // Older mobile browsers expose FileReader but not Blob.arrayBuffer().
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(reader.error || new Error("read"));
+      reader.onabort = () => reject(new Error("read"));
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
   async function addFile(file){
     if (file.size > MAX_FILE_BYTES) throw new Error("file-size");
     const existing = await request(null, "getAll");
@@ -203,7 +226,7 @@ const LocalDocuments = (function(){
     if (existing.length >= MAX_FILES || used + file.size > MAX_TOTAL_BYTES) throw new Error("quota");
     const cryptoKey = await key(true);
     const iv = crypto.getRandomValues(new Uint8Array(12));
-    const ciphertext = await crypto.subtle.encrypt({ name:"AES-GCM", iv }, cryptoKey, await file.arrayBuffer());
+    const ciphertext = await crypto.subtle.encrypt({ name:"AES-GCM", iv }, cryptoKey, await readFileBytes(file));
     const metaIv = crypto.getRandomValues(new Uint8Array(12));
     const metadata = await crypto.subtle.encrypt(
       { name:"AES-GCM", iv:metaIv },
@@ -229,7 +252,7 @@ const LocalDocuments = (function(){
     if (locked) return status(t("files_unlock"), true);
     if (!hasUnlockedPin()) return status(t("files_pin_first"), true);
     status(t("files_saving"), false);
-    let saved = 0, rejected = 0;
+    let saved = 0, rejected = 0, lastError = "";
     for (const file of files) {
       try {
         await addFile(file);
@@ -237,15 +260,16 @@ const LocalDocuments = (function(){
       } catch(error) {
         rejected++;
         console.error("Could not save local file", error);
-        if (error && error.message === "file-size") status(t("files_too_large"), true);
-        else if (error && error.message === "quota") status(t("files_limit"), true);
-        else status(t("files_error"), true);
+        if (error && error.message === "file-size") lastError = t("files_too_large");
+        else if (error && error.message === "quota") lastError = t("files_limit");
+        else lastError = t("files_error");
       }
     }
     await render();
+    if (rejected) status(lastError, true);
     if (saved && rejected) toast(t("files_partial").replace("%s", saved).replace("%d", rejected));
     else if (saved) toast(t("files_saved").replace("%s", saved));
-    else if (rejected) toast(t("files_error"));
+    else if (rejected) toast(lastError);
   }
 
   async function dropUnusedKey(){
@@ -319,6 +343,8 @@ const LocalDocuments = (function(){
     });
   }
 
+  const pinButton = $("#filesPin");
+  if (pinButton) pinButton.addEventListener("click", () => lockSheet(locked ? "unlock" : "set"));
   const input = $("#filesIn");
   if (input) input.addEventListener("change", async () => {
     const files = Array.from(input.files || []);

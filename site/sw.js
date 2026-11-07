@@ -4,7 +4,7 @@
    a link to a learning site still goes to the phone's network, and no
    request is made unless the person taps that link.
    ================================================================ */
-const CACHE = "pusha-2.8.3";     // bump when you ship a new version
+const CACHE = "pusha-2.8.4";     // bump when you ship a new version
 const SHELL = [
   "./", "index.html", "styles.css", "theme.js", "manifest.webmanifest",
   "icons/icon-192.png", "icons/icon-512.png", "icons/icon.svg",
