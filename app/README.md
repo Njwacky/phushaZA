@@ -1,7 +1,8 @@
 # Pusha — project structure
 
-The after-matric kit. **Static only:** no server, no build step required to run,
-no account, no tracking. Open `index.html` and it works.
+The after-matric kit. The core app runs without a server, build step or account.
+Optional opt-in usage counts require Netlify Functions; see `USAGE-ANALYTICS.md`.
+Open `index.html` and the core app works.
 
 ```
 app/
@@ -47,12 +48,11 @@ app/
 **Script order in `index.html` is load-bearing** — the scripts are classic scripts sharing one global scope, so `i18n.js` must come before anything that
 calls `t()`, and the PDF builder must load after its dependencies. Nothing here needs a bundler.
 
-Everything the user sees is in the files above. The only material outside this
-folder is `../research/learning-resources.md` — the note that records which free
-course links were checked, and when. Nothing in the app links to it, so the
-shipped folder is 100% product.
+The core app is in this folder. Optional usage reporting also uses the Netlify
+Functions in `../netlify/functions`; the learning-resources research note is not
+included in the published site.
 
-There are exactly **two** HTML files, and they are the same app:
+The app has two builds; the separate `usage.html` is the optional owner dashboard:
 
 | file | use it for |
 |------|------------|
@@ -181,7 +181,7 @@ languages (281 keys each): `diy_*` and `btn_back`.
 
 **The pictures are drawn, not downloaded.** All 30 panels are plain SVG in
 `js/diy-art.js` — 40 KB for the lot, no photos, no external files, nothing to
-fetch in an app that promises nothing leaves the phone. Each project has three:
+fetch in an app that keeps personal details on the phone. Each project has three:
 *what you need*, *the main move*, *finished*. `tests/features.js` asserts that a
 project sheet contains no `http://` or `https://` anywhere in its markup, so a
 stray remote image can never creep back in.

@@ -29,7 +29,7 @@ const css   = read("styles.css");
 const theme = read("theme.js");
 
 // every js/ file, in exactly the order index.html loads them
-const JS_ORDER = ["pdf-lib.min","html2canvas.min","data-ideas","data-learn","data-diy","diy-art","core","i18n","pack","cv-checks","misc","ideas","money","documents","path","diy","hint-resize", "hint-ios", "pdf-pack"];
+const JS_ORDER = ["pdf-lib.min","html2canvas.min","data-ideas","data-learn","data-diy","diy-art","core","i18n","pack","cv-checks","misc","ideas","money","documents","path","diy","hint-resize", "hint-ios", "pdf-pack", "usage"];
 const app = JS_ORDER.map(f => read("js/" + f + ".js")).join("\n\n");
 
 function must(cond, msg){ if (!cond){ console.error("build failed: " + msg); process.exit(1); } }
@@ -51,6 +51,7 @@ must(JS_ORDER.every((f, i, a) => i === 0 || html.indexOf('js/' + a[i-1] + '.js')
 // would eat "$$" in the source (JS treats $$ as an escaped $) and silently
 // turn the $$ helper into a second $ declaration.
 const out = html
+  .replace('<html lang="en-ZA">', '<html lang="en-ZA" data-standalone="true">')
   .replace('<link rel="stylesheet" href="styles.css">', () => "<style>\n" + css.trim() + "\n</style>")
   .replace('<script src="theme.js"></script>', () => "<script>\n" + theme.trim() + "\n</script>")
   // a single file has no folder next to it, so the manifest (and its icon)
@@ -67,6 +68,7 @@ const out = html
   .replace(/<script src="js\/[a-z0-9.-]+\.js"><\/script>/g, () => "")
   .replace("</body>", () => "<script>\n" + app.trim() + "\n</script>\n</body>");
 
+must(out.includes('data-standalone="true"'), "standalone privacy marker missing");
 must(!out.includes('src="js/'), "unreplaced js/ reference left behind");
 must(!out.includes('src="app.js"') && !out.includes('src="theme.js"'), "unreplaced script reference left behind");
 must(!out.includes('href="styles.css"'), "unreplaced css reference left behind");

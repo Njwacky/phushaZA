@@ -1,14 +1,14 @@
 /* ================================================================
    Pusha — sw.js   (service worker: keeps the app itself on the phone)
    Only the app's own files are cached. Nothing else is ever touched:
-   a link to a learning site still goes to the phone's network, and no
-   request is made unless the person taps that link.
+   a link to a learning site still goes to the phone's network. Optional
+   usage requests go directly to Netlify only after consent.
    ================================================================ */
-const CACHE = "pusha-2.9.1";     // bump when you ship a new version
+const CACHE = "pusha-3.0.0";     // bump when you ship a new version
 const SHELL = [
   "./", "index.html", "styles.css", "theme.js", "manifest.webmanifest",
   "icons/icon-192.png", "icons/icon-512.png", "icons/icon.svg",
-  "js/pdf-lib.min.js", "js/html2canvas.min.js", "js/pdf-pack.js",
+  "js/pdf-lib.min.js", "js/html2canvas.min.js", "js/pdf-pack.js", "js/usage.js",
   "js/data-ideas.js", "js/data-learn.js", "js/core.js", "js/i18n.js", "js/pack.js",
   "js/cv-checks.js", "js/misc.js", "js/ideas.js", "js/money.js", "js/path.js",
   "js/data-diy.js", "js/diy-art.js", "js/documents.js", "js/diy.js", "js/hint-resize.js", "js/hint-ios.js",
@@ -41,10 +41,15 @@ self.addEventListener("fetch", e => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;   // learning links: straight to the network
+  // Never cache functions, particularly the private, key-protected report.
+  if (url.pathname.startsWith("/.netlify/functions/")) return;
 
   // the page itself: try the phone's network first so an update is picked up,
   // fall back to the copy on the phone so it still opens with no data
   if (req.mode === "navigate") {
+    // Only the app shell belongs in the offline index cache, never the owner dashboard.
+    const root = new URL("./", self.location.href).pathname;
+    if (url.pathname !== root && url.pathname !== root + "index.html") return;
     e.respondWith((async () => {
       try {
         const fresh = await fetch(req);

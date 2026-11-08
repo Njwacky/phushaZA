@@ -1,0 +1,8 @@
+# Git-connected Netlify deployment. The static site and functions deploy together.
+[build]
+  command = "node app/build-dist.js"
+  publish = "site"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "22"

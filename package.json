@@ -1,0 +1,7 @@
+{
+  "name": "pusha-za",
+  "private": true,
+  "engines": { "node": ">=22.12.0" },
+  "dependencies": { "@netlify/blobs": "11.1.8" },
+  "scripts": { "test:usage": "node --test tests/usage-api.test.js tests/usage-netlify.test.mjs" }
+}
