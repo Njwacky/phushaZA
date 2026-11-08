@@ -119,7 +119,10 @@ function restoreLastView(){
   const saved = Store.get(LAST_VIEW_KEY, "vault");
   show(locked ? "vault" : (APP_VIEWS.indexOf(saved) > -1 ? saved : "vault"), false);
 }
-$$("#tabs button").forEach(b => b.addEventListener("click", () => show(b.dataset.view)));
+$$("#tabs button").forEach(b => b.addEventListener("click", () => {
+  show(b.dataset.view);
+  if (typeof UsageAnalytics !== "undefined" && UsageAnalytics) UsageAnalytics.record(b.dataset.view);
+}));
 
 /* ---------- theme ---------- */
 const THEME_KEY = "pusha_theme";
@@ -195,7 +198,7 @@ function checkSAID(raw){
 }
 
 
-const PUSHA_VERSION = "2.9";
+const PUSHA_VERSION = "3.0";
 
 /* ---------- 3b. SAYING IT OUT LOUD WHEN A SAVE FAILS ---------- */
 function storageFail(){

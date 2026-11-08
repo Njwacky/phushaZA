@@ -124,7 +124,7 @@ if (ctWa) ctWa.addEventListener("click", (e) => {
 $("#aboutBtn").addEventListener("click", () => {
   $("#sheetBody").innerHTML = `
     <h2 style="margin:0 0 4px">Pusha ${PUSHA_VERSION}</h2>
-    <p class="small muted" style="margin:0 0 14px">The after-matric kit — plain HTML, CSS and JS. No server, no account, no tracking. It also ships as a single file you can copy to a phone or a flash drive.</p>
+    <p class="small muted" style="margin:0 0 14px">The after-matric kit — plain HTML, CSS and JS. No account. Optional usage counts are sent only with your permission. It also ships as a single file you can copy to a phone or a flash drive.</p>
     <h3>What is inside</h3>
     <ul class="list">
       <li><span class="k">Vault — your documents and details, encrypted with a PIN if you want</span></li>
@@ -134,7 +134,7 @@ $("#aboutBtn").addEventListener("click", () => {
       <li><span class="k">Path — a 7-day plan, free opportunities, free courses in South Africa and scam warnings</span></li>
     </ul>
     <h3 style="margin-top:16px">Privacy, in plain words</h3>
-    <p class="small">Everything you type is stored on this device only. There is no server, no login and no analytics. If you clear your browser data, the details go with it — so use <b>Save a backup file</b> in the Vault tab, and print your CV and detail sheet when they matter.</p>
+    <p class="small">Your personal details and files stay on this device. Optional usage counts are sent only if you agree; they contain no names, ID numbers, CV contents or files. Netlify receives network information such as your IP address when counts are sent. You can change your choice in Path → Usage privacy settings. If you clear your browser data, the details go with it — so use <b>Save a backup file</b> in the Vault tab, and print your CV and detail sheet when they matter.</p>
     <p class="small">When the phone refuses to store something — a full browser is the usual reason — Pusha now says so instead of pretending it saved.</p>
     <p class="small"><b>Your words are treated as words.</b> A name, a cashbook note, a CV section or a file someone sends you is never run as code — it is shown exactly as typed, and a "photo" that points at a website is thrown away instead of being fetched. That matters because one of the few doors into this app is a backup file from a friend: Pusha reads only its own keys, refuses a file that is not a Pusha backup, and asks before it replaces anything on your phone — offering to download your current data first.</p>
     <p class="small"><b>For the mistakes people actually make.</b> A PIN has to be typed twice before it is saved, because a mistyped PIN cannot be recovered. Amounts can be typed as <b>R1 200,50</b> or <b>1,200.50</b> and they still work, rubbish is refused with a reason instead of becoming R0, and the same line twice in four seconds is caught. An email with no @ or a phone number with letters gets a quiet warning — it never stops you saving.</p>

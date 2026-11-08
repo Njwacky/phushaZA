@@ -225,7 +225,10 @@ function openCV(){
   $("#printCV").addEventListener("click", () => {
     saveVault(true);
     $("#printArea").innerHTML = '<div style="padding:14mm;max-width:190mm">' + cvDoc() + '</div>';
-    try { window.print(); } catch(e){ toast(t("toast_print_blocked")); }
+    try {
+      if (typeof UsageAnalytics !== "undefined" && UsageAnalytics) UsageAnalytics.record("cv_print");
+      window.print();
+    } catch(e){ toast(t("toast_print_blocked")); }
   });
   $("#copyCVtext").addEventListener("click", async (e) => { await copyText(cvText(), e.currentTarget); });
   $("#shareCV").addEventListener("click", async () => {

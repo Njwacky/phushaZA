@@ -344,6 +344,7 @@ function applyLang(){
   [renderBlocks, () => { try { showBlock(activeBlock, false, true); } catch(e){} },
    renderMyIdeas, renderIdeas, renderCVThumb, renderCVBanner, renderMoney, renderPlan,
    () => { if (typeof renderLocalDocuments === "function") renderLocalDocuments(); },
+   () => { if (typeof UsageAnalytics !== "undefined" && UsageAnalytics) UsageAnalytics.render(); },
    () => { try { renderIdInfo(); renderDocs(); } catch(e){} }]
     .forEach(fn => { try { fn(); } catch(e){} });
 }

@@ -635,3 +635,7 @@ html[data-theme="dark"] .ctic.wa{background:rgba(37,211,102,.18);color:#5ee39b}
 .pdf-pack-status{min-height:1.5em;overflow-wrap:anywhere;white-space:pre-line}
 
 .pdf-vault-file{width:100%;justify-content:flex-start;margin:0 0 6px;overflow-wrap:anywhere}
+
+/* The opt-in and settings stay hidden when unavailable or already answered. */
+#usageChoice[hidden],#usageSettings[hidden]{display:none!important}
+#usageChoice .btns .btn{flex:1}

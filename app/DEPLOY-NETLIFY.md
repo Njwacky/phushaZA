@@ -23,7 +23,8 @@ points at, `_headers`, `netlify.toml`, `404.html`.
 4. Netlify gives you `https://something-random.netlify.app` with HTTPS already on.
 5. Site configuration → **Change site name** so the link is shareable.
 
-That URL is live and installable immediately. This is the route I'd take today.
+That URL is live and installable immediately. The core app works, but this
+method does not deploy the functions needed for optional usage totals.
 
 ## B · From a git repo (auto-deploy on push)
 
@@ -35,8 +36,10 @@ That URL is live and installable immediately. This is the route I'd take today.
    * Base directory: leave empty.
 4. Deploy. Every push rebuilds `site/` and republishes.
 
-Do **not** create a `netlify.toml` at the repo root: the generated one inside
-`site/` is the real config, and a root file would point at the wrong folder.
+The root `netlify.toml` configures the Git-connected build and Netlify Functions.
+Optional usage analytics also requires a private Functions environment key; see
+[USAGE-ANALYTICS.md](USAGE-ANALYTICS.md). Drag-and-drop of `site/` does not
+include those functions and will not collect usage counts.
 
 ---
 
@@ -80,8 +83,8 @@ Expect `25 checks, 25 passed, pageErrors []`. Then, by thumb:
 3. **Airplane mode**, launch from the icon: ideas, DIY photos, your vault.
 4. **iPhone**: fill a name → the *Keep this on your iPhone* card → *Got it* →
    Share → *Add to Home Screen*.
-5. **View source** on the live URL and search for `analytics`: there should be
-   nothing. Netlify injects nothing by default — keep it that way.
+5. If using optional usage counts, follow [USAGE-ANALYTICS.md](USAGE-ANALYTICS.md)
+   to configure the private key and verify opt-in and reporting on production.
 
 ---
 
@@ -90,8 +93,8 @@ Expect `25 checks, 25 passed, pageErrors []`. Then, by thumb:
 - **Asset optimization: OFF.** It rewrites and bundles assets, which fights a
   service worker that caches files by name.
 - **Snippet injection: none.** Any injected script — Netlify Forms, analytics,
-  a chat widget — breaks both the CSP and the "nothing leaves your phone" line on
-  the About card.
+  a chat widget — may break the CSP, the privacy choice, or offline operation.
+  The only built-in analytics is the optional same-origin aggregate service.
 - **Branch / deploy previews:** they work, but each preview URL is its own origin
   with its own storage. Test the PWA on the **production** URL, not a preview.
 - **Rollbacks:** Deploys → pick the previous deploy → *Publish deploy*. Because

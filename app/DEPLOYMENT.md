@@ -60,8 +60,9 @@ recorded before 2.8 and must not be treated as this release's test results.
   for the page and reloads the shell in `install`; a year-long `immutable` header on
   `index.html` would freeze people on an old build. The other files are safe to cache
   hard because the cache name busts them.
-- **No CDN, no analytics, no third-party font.** Any of those breaks the offline
-  promise and the "nothing leaves the phone" line on the About card.
+- **No CDN or third-party font.** The optional aggregate usage service uses
+  same-origin Netlify Functions and stays off until a person opts in; personal
+  details and files are not sent. See `USAGE-ANALYTICS.md`.
 
 ---
 

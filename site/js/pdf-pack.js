@@ -233,6 +233,7 @@ var PdfPack = (function(){
       const url = URL.createObjectURL(new Blob([bytes], {type:"application/pdf"}));
       const link = document.createElement("a"); link.href = url; link.download = "pusha-cv-pack.pdf";
       document.body.appendChild(link); link.click(); link.remove();
+      if (typeof UsageAnalytics !== "undefined" && UsageAnalytics) UsageAnalytics.record("pdf_download");
       setTimeout(() => URL.revokeObjectURL(url), 60000);
       message(t("pdf_done"));
     } catch(error){ if (active(id)) message(t("pdf_error"), true); }

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en-ZA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Pusha — usage totals</title>
+  <link rel="stylesheet" href="usage-admin.css">
+  <script src="usage-admin.js" defer></script>
+</head>
+<body>
+  <main>
+    <a href="./index.html">← Back to Pusha</a>
+    <h1>Pusha usage totals</h1>
+    <p>Owner access · Last 30 days · UTC</p>
+    <p>Counts include only people who opted in. They are approximate, not unique users. Offline counts may arrive later.</p>
+    <form id="login">
+      <label for="key">Dashboard access key</label>
+      <input id="key" type="password" autocomplete="off" required>
+      <button type="submit">View totals</button>
+    </form>
+    <p id="message" role="status" aria-live="polite"></p>
+    <section id="results" hidden>
+      <h2>Last 30 days</h2>
+      <div id="totals" class="totals"></div>
+      <p>CV prints count print / Save as PDF attempts, including cancelled dialogs. PDF packs count download attempts.</p>
+      <p>Times are grouped by the UTC day the action occurred. Counts are not per-person and cannot be used to identify returning users.</p>
+    </section>
+  </main>
+</body>
+</html>

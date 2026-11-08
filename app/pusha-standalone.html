@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-ZA">
+<html lang="en-ZA" data-standalone="true">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -660,6 +660,10 @@ html[data-theme="dark"] .ctic.wa{background:rgba(37,211,102,.18);color:#5ee39b}
 .pdf-pack-status{min-height:1.5em;overflow-wrap:anywhere;white-space:pre-line}
 
 .pdf-vault-file{width:100%;justify-content:flex-start;margin:0 0 6px;overflow-wrap:anywhere}
+
+/* The opt-in and settings stay hidden when unavailable or already answered. */
+#usageChoice[hidden],#usageSettings[hidden]{display:none!important}
+#usageChoice .btns .btn{flex:1}
 </style>
 
 </head>
@@ -759,6 +763,7 @@ html[data-theme="dark"] .ctic.wa{background:rgba(37,211,102,.18);color:#5ee39b}
       </svg>
     </section>
     <div id="storageNote"></div>
+    <div id="usageChoice" class="card" hidden></div>
     <div id="lockGate"></div>
 
     <div class="card">
@@ -841,7 +846,7 @@ html[data-theme="dark"] .ctic.wa{background:rgba(37,211,102,.18);color:#5ee39b}
     </div>
 
     <button class="btn" id="saveVault" data-i18n="btn_save">Save my details</button>
-    <p class="tiny muted" style="text-align:center;margin:10px 0 16px">Saved only on this device. No account, no server, works with no airtime.</p>
+    <p class="tiny muted" style="text-align:center;margin:10px 0 16px">Your details are saved on this device. No account; works with no airtime.</p>
 
     <div class="card">
       <h3 data-i18n="bk_title">Backup</h3>
@@ -997,7 +1002,8 @@ html[data-theme="dark"] .ctic.wa{background:rgba(37,211,102,.18);color:#5ee39b}
         <h3 data-i18n="pa_about">About this app</h3>
         <button class="btn sm ghost" id="aboutBtn"><svg class="icon sm"><use href="#i-info"/></svg> Details</button>
       </div>
-      <div class="about-row"><svg class="icon sm"><use href="#i-shield"/></svg><span><b>Nothing leaves your phone.</b> No account, no server, no analytics. Turn your data off and everything still works.</span></div>
+      <div class="about-row"><svg class="icon sm"><use href="#i-shield"/></svg><span data-i18n="usage_about">Your personal details stay on this phone. Optional usage counts are sent only if you agree.</span></div>
+      <button class="btn sm ghost" type="button" id="usageSettings" style="margin:8px 0" hidden data-i18n="usage_settings">Usage privacy settings</button>
       <div class="about-row"><svg class="icon sm"><use href="#i-lock"/></svg><span><b>Your vault can be encrypted</b> with a PIN only you know.</span></div>
       <div class="about-row"><svg class="icon sm"><use href="#i-doc"/></svg><span><b>Version <span id="verText">2.7</span></b> · English, isiZulu, Sesotho, isiNdebele · works offline once opened.</span></div>
     </div>
@@ -1071,6 +1077,7 @@ html[data-theme="dark"] .ctic.wa{background:rgba(37,211,102,.18);color:#5ee39b}
 <!-- 10. local encrypted document storage -->
 
 <!-- 10. path -->
+
 
 
 
@@ -2475,7 +2482,10 @@ function restoreLastView(){
   const saved = Store.get(LAST_VIEW_KEY, "vault");
   show(locked ? "vault" : (APP_VIEWS.indexOf(saved) > -1 ? saved : "vault"), false);
 }
-$$("#tabs button").forEach(b => b.addEventListener("click", () => show(b.dataset.view)));
+$$("#tabs button").forEach(b => b.addEventListener("click", () => {
+  show(b.dataset.view);
+  if (typeof UsageAnalytics !== "undefined" && UsageAnalytics) UsageAnalytics.record(b.dataset.view);
+}));
 
 /* ---------- theme ---------- */
 const THEME_KEY = "pusha_theme";
@@ -2551,7 +2561,7 @@ function checkSAID(raw){
 }
 
 
-const PUSHA_VERSION = "2.9";
+const PUSHA_VERSION = "3.0";
 
 /* ---------- 3b. SAYING IT OUT LOUD WHEN A SAVE FAILS ---------- */
 function storageFail(){
@@ -2630,6 +2640,7 @@ function toastAction(msg, label, fn){
 const LANGS = [["en","English","EN"],["zu","isiZulu","ZU"],["st","Sesotho","ST"],["nr","isiNdebele","NR"]];
 const I18N = {
 en:{
+ usage_title:"Help improve Pusha?",usage_body:"With your permission, Pusha sends counts of app opens, sections used, CV print attempts and PDF pack downloads. Your name, ID, CV and files are never included. Counts made offline can be sent later. Netlify receives connection information such as your IP address; counts are kept until the owner deletes them. You can change your choice in Path at any time.",usage_yes:"Allow usage counts",usage_no:"No thanks",usage_disable:"Turn off",usage_settings:"Usage privacy settings",usage_about:"Your personal details stay on this phone. Optional usage counts are sent only if you agree.",usage_on:"Usage counts are on.",usage_off:"Usage counts are off.",usage_clear:"Turning counts off removes unsent counts. Counts already sent cannot be individually removed.",usage_error:"This browser could not save your privacy choice. Usage counts remain off.",
  pdf_duplicate:"This PDF is already in your pack. Remove all its pages to add it again.",pdf_vault_all_added:"All saved PDFs are already in your pack. Remove all pages of a file to add it again.",
  pdf_add_vault:"Add from Vault",pdf_vault_empty:"No PDFs saved in your Vault yet.",pdf_vault_choose:"Choose a saved PDF:",
  pdf_title:"Combine CV & PDFs",pdf_card_hint:"Add your CV and PDFs, arrange the pages, and save one PDF.",pdf_open:"Build my PDF pack",pdf_add_cv:"Add my Pusha CV",pdf_add_files:"Add PDF files",pdf_order:"Page order",pdf_empty:"No pages yet. Add your CV or a PDF.",pdf_up:"Move up",pdf_down:"Move down",pdf_remove:"Remove",pdf_save:"Download combined PDF",pdf_close:"Close",pdf_busy:"Working on your phone…",pdf_privacy:"Files are processed on this device, not uploaded. The downloaded PDF is not PIN-encrypted. Your CV is added as an image.",pdf_limits:"Up to 10 MB per PDF, 25 MB total and 100 pages. Password-protected PDFs cannot be merged. Signatures and form fields may not be preserved.",pdf_bad:"Could not open this PDF. It may be damaged or password-protected.",pdf_large:"This PDF is larger than 10 MB.",pdf_limit:"The pack is limited to 25 MB and 100 pages.",pdf_error:"Could not create the PDF. Please try again.",pdf_cv:"Pusha CV",pdf_page:"page",pdf_ready:"Pages ready",pdf_no_pages:"Add at least one page first.",pdf_cv_added:"Your CV is already in the pack.",pdf_cv_long:"Your CV is too long to add. Shorten it and try again.",pdf_done:"Your PDF is ready. Check the downloaded file before sending.",
@@ -2772,6 +2783,7 @@ lock_pin_again:"Type the PIN again",
 
 ct_title:"Spotted a mistake? Tell us",ct_call:"Call or SMS",ct_mail:"Email",ct_note:"Free to message. Nothing is sent unless you tap.",fb_send_email:"Send it by email",ct_wa_note:"Send us a message — free",fb_send_wa:"Send on WhatsApp",ios_title:"Keep this on your iPhone",ios_body:"iPhone deletes a website's saved details after 7 days without a visit. On the home screen it does not.",ios_step1:"Tap Share at the bottom of Safari.",ios_step2:"Choose “Add to Home Screen”, then open Pusha from the new icon.",ios_ok:"Got it",ios_backup:"Save a backup",ios_later:"Not now"},
 zu:{
+ usage_title:"Usisize sithuthukise iPusha?",usage_body:"Uma uvuma, iPusha ithumela izibalo zokuvula i-app, izigaba ezisetshenzisiwe, imizamo yokuphrinta i-CV nokudawuniloda iphakethe le-PDF. Igama, i-ID, okuqukethwe yi-CV namafayela akuthunyelwa. Izibalo ezenziwe ungaxhunyiwe zingathunyelwa kamuva. I-Netlify ithola imininingwane yokuxhumana njengekheli le-IP; izibalo zigcinwa umnikazi aze azisuse. Ungashintsha isinqumo sakho ku-Path noma nini.",usage_yes:"Vumela izibalo",usage_no:"Cha ngiyabonga",usage_disable:"Cisha",usage_settings:"Izilungiselelo zobumfihlo",usage_about:"Imininingwane yakho ihlala kule foni. Izibalo zithunyelwa kuphela uma uvuma.",usage_on:"Izibalo zivuliwe.",usage_off:"Izibalo zivaliwe.",usage_clear:"Ukucisha kususa izibalo ezingakathunyelwa. Esezithunyelwe azikwazi ukususwa ngazinye.",usage_error:"Lesi siphequluli asikwazanga ukugcina isinqumo sakho. Izibalo zihlala zivaliwe.",
  pdf_duplicate:"Le PDF isivele isephaketheni lakho. Susa wonke amakhasi ayo ukuze uyifake futhi.",pdf_vault_all_added:"Wonke ama-PDF agciniwe asephaketheni lakho. Susa wonke amakhasi efayela ukuze ulifake futhi.",
  pdf_add_vault:"Faka okuvela kuVault",pdf_vault_empty:"Awekho ama-PDF agcinwe kuVault.",pdf_vault_choose:"Khetha i-PDF egciniwe:",
  pdf_title:"Hlanganisa i-CV nama-PDF",pdf_card_hint:"Faka i-CV nama-PDF, hlela amakhasi bese ugcina i-PDF eyodwa.",pdf_open:"Yenza iphakethe le-PDF",pdf_add_cv:"Faka i-CV yami yePusha",pdf_add_files:"Faka amafayela e-PDF",pdf_order:"Ukuhleleka kwamakhasi",pdf_empty:"Awekho amakhasi. Faka i-CV noma i-PDF.",pdf_up:"Hambisa phezulu",pdf_down:"Hambisa phansi",pdf_remove:"Susa",pdf_save:"Dawuniloda i-PDF",pdf_close:"Vala",pdf_busy:"Kusalungiswa kule foni…",pdf_privacy:"Amafayela asetshenzwa kule foni, awathunyelwa. I-PDF elandiwe ayivikelwe nge-PIN. I-CV ifakwa njengesithombe.",pdf_limits:"Ifayela ngalinye: 10 MB; isamba: 25 MB namakhasi 100. Ama-PDF anephasiwedi awasebenzi. Amasiginesha nezinkambu zamafomu zingase zingagcinwa.",pdf_bad:"Le PDF ayivuleki. Kungenzeka yonakele noma inephasiwedi.",pdf_large:"Le PDF ingaphezu kuka-10 MB.",pdf_limit:"Umkhawulo ngu-25 MB namakhasi 100.",pdf_error:"I-PDF ayenziwanga. Zama futhi.",pdf_cv:"I-CV yePusha",pdf_page:"ikhasi",pdf_ready:"Amakhasi alungile",pdf_no_pages:"Faka okungenani ikhasi elilodwa.",pdf_cv_added:"I-CV yakho isivele ikhona.",pdf_cv_long:"I-CV yinde kakhulu. Yifinyeze uzame futhi.",pdf_done:"I-PDF isilungile. Yihlole ngaphambi kokuyithumela.",
@@ -2916,6 +2928,7 @@ lock_pin_again:"Bhala i-PIN futhi",
 
 ct_title:"Ubonile iphutha? Sitshele",ct_call:"Shayela noma thumela i-SMS",ct_mail:"I-imeyili",ct_note:"Kumahhala ukuthumela umlayezo. Akukho okuthunyelwayo ngaphandle kokuthi ucofe.",fb_send_email:"Yithumele nge-imeyili",ct_wa_note:"Sithumelele umlayezo — kumahhala",fb_send_wa:"Thumela nge-WhatsApp",ios_title:"Gcina lokhu ku-iPhone yakho",ios_body:"I-iPhone isusa imininingwane egciniwe yewebhusayithi ngemva kwezinsuku ezi-7 ngaphandle kokuvakasha. Esikrinini sasekhaya ayikwenzi lokho.",ios_step1:"Thinta u-Share ngezansi kwe-Safari.",ios_step2:"Khetha “Add to Home Screen”, bese uvula i-Pusha kusithonjana esisha.",ios_ok:"Ngizwile",ios_backup:"Gcina ikhophi",ios_later:"Hhayi manje"},
 st:{
+ usage_title:"Re thuse ho ntlafatsa Pusha?",usage_body:"Ha o dumela, Pusha e romela dipalo tsa ho bula app, dikarolo tse sebedisitsweng, boiteko ba ho hatisa CV le ho jarolla pakete ya PDF. Lebitso la hao, ID, dikahare tsa CV le difaele ha di romelwe. Dipalo tsa ntle ho inthanete di ka romelwa hamorao. Netlify e fumana tlhahisoleseding ya kgokelo e kang aterese ya IP; dipalo di bolokwa ho fihlela monga tsona a di hlakola. O ka fetola kgetho ya hao ho Path neng kapa neng.",usage_yes:"Dumela dipalo",usage_no:"Tjhe ke a leboha",usage_disable:"Tima",usage_settings:"Ditlhophiso tsa lekunutu",usage_about:"Dintlha tsa hao di dula fonong ena. Dipalo di romelwa feela ha o dumela.",usage_on:"Dipalo di buletswe.",usage_off:"Dipalo di kwetswe.",usage_clear:"Ho tima ho tlosa dipalo tse sa romelwang. Tse seng di rometswe di ke ke tsa tloswa ka bonngwe.",usage_error:"Sebatli ha se a kgona ho boloka kgetho ya hao. Dipalo di dula di kwetswe.",
  pdf_duplicate:"PDF ena e se e le paketeng ya hao. Tlosa maqephe ohle a yona ho e kenya hape.",pdf_vault_all_added:"Di-PDF tsohle tse bolokilweng di se di le paketeng ya hao. Tlosa maqephe ohle a faele ho e kenya hape.",
  pdf_add_vault:"Kenya ho tswa ho Vault",pdf_vault_empty:"Ha ho di-PDF tse bolokilweng ho Vault.",pdf_vault_choose:"Kgetha PDF e bolokilweng:",
  pdf_title:"Kopanya CV le di-PDF",pdf_card_hint:"Kenya CV le di-PDF, hlophisa maqephe mme o boloke PDF e le nngwe.",pdf_open:"Etsa pakete ya PDF",pdf_add_cv:"Kenya CV ya ka ya Pusha",pdf_add_files:"Kenya difaele tsa PDF",pdf_order:"Tatelano ya maqephe",pdf_empty:"Ha ho maqephe. Kenya CV kapa PDF.",pdf_up:"Isa hodimo",pdf_down:"Isa tlase",pdf_remove:"Tlosa",pdf_save:"Jarolla PDF e kopantsweng",pdf_close:"Kwala",pdf_busy:"E sebetsa fonong ena…",pdf_privacy:"Difaele di sebetswa fonong ena, ha di romelwe. PDF e jarollotsweng ha e a sireletswa ka PIN. CV e kenngwa e le setshwantsho.",pdf_limits:"Ho fihla ho 10 MB faeleng, 25 MB kaofela le maqephe a 100. Di-PDF tse nang le phasewete ha di sebetse. Mesaeno le dikarolo tsa diforomo di ka nna tsa se bolokwe.",pdf_bad:"PDF ena ha e bulehe. E ka nna ya senyeha kapa ya ba le phasewete.",pdf_large:"PDF ena e feta 10 MB.",pdf_limit:"Moedi ke 25 MB le maqephe a 100.",pdf_error:"PDF ha e a etswa. Leka hape.",pdf_cv:"CV ya Pusha",pdf_page:"leqephe",pdf_ready:"Maqephe a lokile",pdf_no_pages:"Kenya bonyane leqephe le le leng.",pdf_cv_added:"CV ya hao e se e le teng.",pdf_cv_long:"CV e telele haholo. E kgutsufatse o leke hape.",pdf_done:"PDF e lokile. E hlahlobe pele o e romela.",
@@ -3060,6 +3073,7 @@ lock_pin_again:"Ngola PIN hape",
 
 ct_title:"O bone phoso? Re bolelle",ct_call:"Letsa kapa romela SMS",ct_mail:"Imeile",ct_note:"Ho lokolohile ho romela molaetsa. Ha ho se romelwang ntle le ha o tobetsa.",fb_send_email:"E romele ka imeile",ct_wa_note:"Re romele molaetsa — mahala",fb_send_wa:"Romela ka WhatsApp",ios_title:"Boloka sena ho iPhone ya hao",ios_body:"iPhone e hlakola dintlha tse bolokilweng tsa webosaete ka mora matsatsi a 7 ntle le ho e etela. Skrineng sa hae ha e etse jwalo.",ios_step1:"Tobetsa Share ka tlase ho Safari.",ios_step2:"Kgetha “Add to Home Screen”, ebe o bula Pusha ho ikhone e ntjha.",ios_ok:"Ke utlwile",ios_backup:"Boloka backup",ios_later:"E seng jwale"},
 nr:{
+ usage_title:"Sisize sithuthukise iPusha?",usage_body:"Nawuvumako, iPusha ithumela iinomboro zokuvula i-app, iingaba ezisetjenzisiweko, imizamo yokugadangisa i-CV nokudawuniloda iphakethe le-PDF. Ibizo, i-ID, okumumethwe yi-CV namafayela akuthunyelwa. Iinomboro ezenziwe ungakaxhumeki zingathunyelwa ngokukhamba kwesikhathi. I-Netlify ithola imininingwane yokuxhumana njengekheli le-IP; iinomboro zigcinwa umnikazi aze azisuse. Ungatjhugulula isiqunto sakho ku-Path nanyana kunini.",usage_yes:"Vumela iinomboro",usage_no:"Awa ngiyathokoza",usage_disable:"Cima",usage_settings:"Iinsetjenziswa zobumfihlo",usage_about:"Imininingwane yakho ihlala efonini le. Iinomboro zithunyelwa kwaphela nawuvumako.",usage_on:"Iinomboro zivuliwe.",usage_off:"Iinomboro zivaliwe.",usage_clear:"Ukucima kususa iinomboro ezingakathunyelwa. Esethunyelweko azinakususwa ngayinye.",usage_error:"Isiphequluli asikakghoni ukugcina isiqunto sakho. Iinomboro zihlala zivaliwe.",
  pdf_duplicate:"I-PDF le seyisephaketheni lakho. Susa woke amakhasi wayo ukuyifaka godu.",pdf_vault_all_added:"Woke ama-PDF agciniweko asephaketheni lakho. Susa woke amakhasi wefayela ukulifaka godu.",
  pdf_add_vault:"Faka okuvela kuVault",pdf_vault_empty:"Akunama-PDF agcinwe kuVault.",pdf_vault_choose:"Khetha i-PDF egciniweko:",
  pdf_title:"Hlanganisa i-CV nama-PDF",pdf_card_hint:"Faka i-CV nama-PDF, hlela amakhasi bese ugcina i-PDF eyodwa.",pdf_open:"Yenza iphakethe le-PDF",pdf_add_cv:"Faka i-CV yami yePusha",pdf_add_files:"Faka amafayela we-PDF",pdf_order:"Ukuhleleka kwamakhasi",pdf_empty:"Akunamakhasi. Faka i-CV namkha i-PDF.",pdf_up:"Yisa phezulu",pdf_down:"Yisa phasi",pdf_remove:"Susa",pdf_save:"Dawuniloda i-PDF",pdf_close:"Vala",pdf_busy:"Kusalungiswa efonini le…",pdf_privacy:"Amafayela asetjenzwa efonini le, awathunyelwa. I-PDF elandiweko ayivikelwa nge-PIN. I-CV ifakwa njengesithombe.",pdf_limits:"Ifayela ngalinye: 10 MB; koke: 25 MB namakhasi 100. Ama-PDF anephasiwedi awasebenzi. Amasiginitjha neenkambu zamaforomo kungenzeka zingagcinwa.",pdf_bad:"I-PDF le ayivuleki. Kungenzeka yonakele namkha inephasiwedi.",pdf_large:"I-PDF le ingaphezu kwe-10 MB.",pdf_limit:"Umkhawulo yi-25 MB namakhasi 100.",pdf_error:"I-PDF ayenziwanga. Linga godu.",pdf_cv:"I-CV yePusha",pdf_page:"ikhasi",pdf_ready:"Amakhasi alungile",pdf_no_pages:"Faka ikhasi elilodwa okungani.",pdf_cv_added:"I-CV yakho seyikhona.",pdf_cv_long:"I-CV yinde khulu. Yifinyeze ulinge godu.",pdf_done:"I-PDF ilungile. Yihlole ngaphambi kokuyithumela.",
@@ -3695,6 +3709,7 @@ function applyLang(){
   [renderBlocks, () => { try { showBlock(activeBlock, false, true); } catch(e){} },
    renderMyIdeas, renderIdeas, renderCVThumb, renderCVBanner, renderMoney, renderPlan,
    () => { if (typeof renderLocalDocuments === "function") renderLocalDocuments(); },
+   () => { if (typeof UsageAnalytics !== "undefined" && UsageAnalytics) UsageAnalytics.render(); },
    () => { try { renderIdInfo(); renderDocs(); } catch(e){} }]
     .forEach(fn => { try { fn(); } catch(e){} });
 }
@@ -3950,7 +3965,10 @@ function openCV(){
   $("#printCV").addEventListener("click", () => {
     saveVault(true);
     $("#printArea").innerHTML = '<div style="padding:14mm;max-width:190mm">' + cvDoc() + '</div>';
-    try { window.print(); } catch(e){ toast(t("toast_print_blocked")); }
+    try {
+      if (typeof UsageAnalytics !== "undefined" && UsageAnalytics) UsageAnalytics.record("cv_print");
+      window.print();
+    } catch(e){ toast(t("toast_print_blocked")); }
   });
   $("#copyCVtext").addEventListener("click", async (e) => { await copyText(cvText(), e.currentTarget); });
   $("#shareCV").addEventListener("click", async () => {
@@ -4093,7 +4111,7 @@ if (ctWa) ctWa.addEventListener("click", (e) => {
 $("#aboutBtn").addEventListener("click", () => {
   $("#sheetBody").innerHTML = `
     <h2 style="margin:0 0 4px">Pusha ${PUSHA_VERSION}</h2>
-    <p class="small muted" style="margin:0 0 14px">The after-matric kit — plain HTML, CSS and JS. No server, no account, no tracking. It also ships as a single file you can copy to a phone or a flash drive.</p>
+    <p class="small muted" style="margin:0 0 14px">The after-matric kit — plain HTML, CSS and JS. No account. Optional usage counts are sent only with your permission. It also ships as a single file you can copy to a phone or a flash drive.</p>
     <h3>What is inside</h3>
     <ul class="list">
       <li><span class="k">Vault — your documents and details, encrypted with a PIN if you want</span></li>
@@ -4103,7 +4121,7 @@ $("#aboutBtn").addEventListener("click", () => {
       <li><span class="k">Path — a 7-day plan, free opportunities, free courses in South Africa and scam warnings</span></li>
     </ul>
     <h3 style="margin-top:16px">Privacy, in plain words</h3>
-    <p class="small">Everything you type is stored on this device only. There is no server, no login and no analytics. If you clear your browser data, the details go with it — so use <b>Save a backup file</b> in the Vault tab, and print your CV and detail sheet when they matter.</p>
+    <p class="small">Your personal details and files stay on this device. Optional usage counts are sent only if you agree; they contain no names, ID numbers, CV contents or files. Netlify receives network information such as your IP address when counts are sent. You can change your choice in Path → Usage privacy settings. If you clear your browser data, the details go with it — so use <b>Save a backup file</b> in the Vault tab, and print your CV and detail sheet when they matter.</p>
     <p class="small">When the phone refuses to store something — a full browser is the usual reason — Pusha now says so instead of pretending it saved.</p>
     <p class="small"><b>Your words are treated as words.</b> A name, a cashbook note, a CV section or a file someone sends you is never run as code — it is shown exactly as typed, and a "photo" that points at a website is thrown away instead of being fetched. That matters because one of the few doors into this app is a backup file from a friend: Pusha reads only its own keys, refuses a file that is not a Pusha backup, and asks before it replaces anything on your phone — offering to download your current data first.</p>
     <p class="small"><b>For the mistakes people actually make.</b> A PIN has to be typed twice before it is saved, because a mistyped PIN cannot be recovered. Amounts can be typed as <b>R1 200,50</b> or <b>1,200.50</b> and they still work, rubbish is refused with a reason instead of becoming R0, and the same line twice in four seconds is caught. An email with no @ or a phone number with letters gets a quiet warning — it never stops you saving.</p>
@@ -5998,6 +6016,7 @@ var PdfPack = (function(){
       const url = URL.createObjectURL(new Blob([bytes], {type:"application/pdf"}));
       const link = document.createElement("a"); link.href = url; link.download = "pusha-cv-pack.pdf";
       document.body.appendChild(link); link.click(); link.remove();
+      if (typeof UsageAnalytics !== "undefined" && UsageAnalytics) UsageAnalytics.record("pdf_download");
       setTimeout(() => URL.revokeObjectURL(url), 60000);
       message(t("pdf_done"));
     } catch(error){ if (active(id)) message(t("pdf_error"), true); }
@@ -6033,6 +6052,136 @@ var PdfPack = (function(){
   }
   $("#openPdfPack").addEventListener("click", open);
   return { clear };
+})();
+
+
+/* Optional, aggregate-only usage counts. Personal fields are never read here.
+   Preference and queued counts are deliberately excluded from Pusha backups. */
+var UsageAnalytics = (function(){
+  const CONSENT = "usage_choice_v1", QUEUE = "usage_queue_v1";
+  const TYPES = ["open", "vault", "pack", "ideas", "money", "path", "cv_print", "pdf_download"];
+  const MAX = 100, DAYS = 7, DAY_MS = 86400000;
+  const supported = !document.documentElement.hasAttribute("data-standalone") &&
+    (location.protocol === "https:" || (location.protocol === "http:" && /^(localhost|127\.0\.0\.1)$/.test(location.hostname)));
+  let timer = null, sending = false, controller = null, sessionStopped = false;
+  function storageGet(key){ try { return localStorage.getItem(key); } catch(e){ return null; } }
+  function storageSet(key, value){ try { localStorage.setItem(key, value); return localStorage.getItem(key) === value; } catch(e){ return false; } }
+  function consent(){ return supported && !sessionStopped && storageGet(CONSENT) === "on"; }
+  function today(){ return new Date().toISOString().slice(0, 10); }
+  function validDay(day){
+    if (typeof day !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(day)) return false;
+    const date = new Date(day + "T00:00:00Z");
+    if (isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== day) return false;
+    const diff = (Date.parse(today()) - date.getTime()) / DAY_MS;
+    return diff >= -1 && diff <= DAYS;
+  }
+  function clean(raw){
+    let data; try { data = JSON.parse(raw || "{}"); } catch(e){ data = {}; }
+    if (!data || typeof data !== "object") data = {};
+    const events = Array.isArray(data.events) ? data.events.filter(e => e && TYPES.includes(e.type) && validDay(e.day)).slice(-MAX).map(e => ({type:e.type, day:e.day})) : [];
+    let pending = data.pending;
+    if (!pending || !/^[a-f0-9]{32}$/.test(pending.id || "") || !validDay(pending.day) || !pending.counts || typeof pending.counts !== "object") pending = null;
+    if (pending){
+      const counts = {}; let sum = 0;
+      TYPES.forEach(type => { const n = pending.counts[type]; if (Number.isInteger(n) && n > 0 && n <= MAX) { counts[type] = n; sum += n; } });
+      pending = sum > 0 && sum <= MAX ? {id:pending.id, day:pending.day, counts} : null;
+    }
+    return {events, pending};
+  }
+  function load(){ return clean(storageGet(QUEUE)); }
+  function save(data){ return storageSet(QUEUE, JSON.stringify(data)); }
+  function clearQueue(){ try { localStorage.removeItem(QUEUE); } catch(e){} }
+  function batchId(){
+    if (!window.crypto || !crypto.getRandomValues) return null;
+    const bytes = crypto.getRandomValues(new Uint8Array(16));
+    return Array.from(bytes, n => n.toString(16).padStart(2, "0")).join("");
+  }
+  function schedule(){
+    if (!consent() || timer) return;
+    timer = setTimeout(() => { timer = null; flush(); }, 5000);
+  }
+  function record(type){
+    if (!consent() || !TYPES.includes(type)) return;
+    const state = load();
+    // Pending + new events are bounded; if full, discard the oldest new count.
+    if (state.events.length >= MAX) state.events.shift();
+    state.events.push({type, day:today()});
+    if (save(state)) schedule();
+  }
+  async function flush(){
+    if (!consent() || sending || navigator.onLine === false) return;
+    const state = load();
+    if (!state.pending && state.events.length){
+      const id = batchId(); if (!id) return;
+      const day = state.events[0].day, counts = {};
+      const keep = [];
+      state.events.forEach(e => { if (e.day === day) counts[e.type] = (counts[e.type] || 0) + 1; else keep.push(e); });
+      state.events = keep; state.pending = {id, day, counts};
+      if (!save(state)) return;
+    }
+    if (!state.pending) return;
+    const batch = state.pending; sending = true;
+    controller = typeof AbortController === "function" ? new AbortController() : null;
+    try {
+      const options = {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(batch), credentials:"omit", referrerPolicy:"no-referrer", cache:"no-store"};
+      if (controller) options.signal = controller.signal;
+      const result = await fetch("/.netlify/functions/usage-collect", options);
+      if (!result.ok || !consent()) return;
+      const current = load();
+      if (current.pending && current.pending.id === batch.id){ current.pending = null; save(current); }
+      if (current.events.length) schedule();
+    } catch(e) { /* stays on the phone for a later attempt */ }
+    finally { sending = false; controller = null; }
+  }
+  function choose(value){
+    if (value !== "on"){
+      sessionStopped = true;
+      // Even if storage is blocked, do not send or retain anything further.
+      if (controller) controller.abort();
+      if (timer) clearTimeout(timer); timer = null;
+      clearQueue();
+      if (!storageSet(CONSENT, "off")) { try { localStorage.removeItem(CONSENT); } catch(e){} }
+      render(); return;
+    }
+    const wasOn = consent();
+    if (!supported || !window.crypto || !crypto.getRandomValues || !storageSet(CONSENT, "on")){
+      clearQueue(); try { localStorage.removeItem(CONSENT); } catch(e){}
+      toast(t("usage_error")); render(); return;
+    }
+    sessionStopped = false; render(); if (!wasOn) record("open");
+  }
+  function options(host, settings){
+    host.replaceChildren();
+    const title = document.createElement("h3"); title.textContent = t("usage_title"); host.appendChild(title);
+    const text = document.createElement("p"); text.className = "small muted"; text.textContent = t("usage_body"); host.appendChild(text);
+    if (settings){
+      const state = document.createElement("p"); state.className = "small"; state.textContent = t(consent() ? "usage_on" : "usage_off"); host.appendChild(state);
+    }
+    const note = document.createElement("p"); note.className = "tiny muted"; note.textContent = t("usage_clear"); host.appendChild(note);
+    const buttons = document.createElement("div"); buttons.className = "btns";
+    [["usage_yes", "on"], [settings ? "usage_disable" : "usage_no", "off"]].forEach(([key, value]) => {
+      const button = document.createElement("button"); button.type = "button"; button.className = "btn sm " + (value === "on" ? "" : "ghost"); button.textContent = t(key);
+      button.addEventListener("click", () => { choose(value); if (settings) closeSheet(); }); buttons.appendChild(button);
+    });
+    if (settings){ const close = document.createElement("button"); close.type = "button"; close.className = "btn sm ghost"; close.textContent = t("btn_close"); close.addEventListener("click", closeSheet); buttons.appendChild(close); }
+    host.appendChild(buttons);
+  }
+  function render(){
+    const card = $("#usageChoice"), settings = $("#usageSettings");
+    if (!card || !settings) return;
+    settings.hidden = !supported;
+    const choice = storageGet(CONSENT);
+    card.hidden = !supported || choice === "on" || choice === "off";
+    if (!card.hidden) options(card, false); else card.replaceChildren();
+  }
+  const settings = $("#usageSettings");
+  if (settings) settings.addEventListener("click", () => { options($("#sheetBody"), true); openSheet(); });
+  addEventListener("online", flush);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) flush(); });
+  setInterval(() => { if (consent()) flush(); }, 30000);
+  render();
+  if (consent()) { record("open"); flush(); }
+  return {record, render};
 })();
 </script>
 </body>
