@@ -15,7 +15,7 @@ const DOCS = [
 ];
 
 const PLAN7 = [
-  ["Day 1","Fill in your Vault","Get your name, ID number, address, school and bank details saved in one place. That is 90% of every form you will ever fill in."],
+  ["Day 1","Fill in your Vault","Get your name, ID number, address and school saved in one place. That is 90% of every form you will ever fill in."],
   ["Day 2","Build your pack","Copy the CV summary and intro block, tick your documents, and print your detail sheet. Put the copies in one plastic sleeve."],
   ["Day 3","Pick ONE idea","Use the matcher, then read the idea properly. Write down what you will need first and what it costs — that is your shopping list."],
   ["Day 4","Get your first 3 customers before you spend anything","Talk to 10 real people. If nobody will pre-order or pre-pay, the idea is wrong — pick another. This is the most important day."],
@@ -170,11 +170,23 @@ window.addEventListener("scroll", () => {
 })();
 
 /* ---------- 4. VAULT ---------- */
-const VAULT_FIELDS = ["fullname","id","dob","gender","phone","email","address","kin","licence","school","year","examno","subjects","skills","bank","acctype","accno","branch"];
+const VAULT_FIELDS = ["fullname","id","dob","gender","phone","email","address","kin","licence","school","year","examno","subjects","skills"];
 let vault = Store.get("pusha_vault", {});
 let locked = false;
 let vaultPin = null;                 // {key, salt} held in memory only while the vault is unlocked
 if (vault && vault.__enc){ vault = {}; locked = true; }
+/* the Banking section was removed — drop the four keys a stored vault may still carry,
+   then persist so the stale values are gone from localStorage, not just from memory */
+const LEGACY_BANK_FIELDS = ["bank","acctype","accno","branch"];
+function pruneLegacyBank(blob){
+  if (!blob || typeof blob !== "object" || blob.__enc) return false;
+  let touched = false;
+  for (const k of LEGACY_BANK_FIELDS) if (Object.prototype.hasOwnProperty.call(blob, k)){ delete blob[k]; touched = true; }
+  return touched;
+}
+(function(){
+  if (pruneLegacyBank(vault)){ try { Store.set("pusha_vault", vault); } catch(e){} }
+})();
 
 /* --- South African ID number check (Luhn) --- */
 function checkSAID(raw){
@@ -198,7 +210,7 @@ function checkSAID(raw){
 }
 
 
-const PUSHA_VERSION = "3.1";
+const PUSHA_VERSION = "3.2";
 
 /* ---------- 3b. SAYING IT OUT LOUD WHEN A SAVE FAILS ---------- */
 function storageFail(){

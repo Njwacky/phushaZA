@@ -185,8 +185,7 @@ $("#printSheet").addEventListener("click", () => {
     ["Phone", v.phone], ["Email", v.email], ["Home address", v.address],
     ["Next of kin", v.kin], ["Driver's licence", v.licence],
     ["High school", v.school], ["Matric year", v.year], ["Exam number", v.examno],
-    ["Best subjects", v.subjects], ["Skills", v.skills],
-    ["Bank", v.bank], ["Account type", v.acctype], ["Account number", v.accno], ["Branch code", v.branch]
+    ["Best subjects", v.subjects], ["Skills", v.skills]
   ];
   $("#printArea").innerHTML =
     '<div style="font:14px/1.5 Arial,sans-serif;padding:24px;max-width:720px">' +
@@ -265,6 +264,11 @@ function backupClean(raw){
     if (bytes > 4 * 1024 * 1024) return;
     clean[k] = v; n++;
   });
+  /* a backup may predate the removal of the Banking section — leave those keys out of the restore */
+  const sv = clean["pusha_vault"];
+  if (sv && typeof sv === "object" && !Array.isArray(sv) && !sv.__enc){
+    ["bank","acctype","accno","branch"].forEach(k => { delete sv[k]; });
+  }
   if (!n) return null;
   const files = typeof LocalDocuments !== "undefined" ? LocalDocuments.cleanBackupRecords(obj.files) : [];
   if (!files) return null;
