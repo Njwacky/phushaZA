@@ -16,7 +16,7 @@ function small({ bars }){
     `<rect width="512" height="512" fill="#0b5c46"/>` +
     `<path fill="#f7f5ef" fill-rule="evenodd" d="${BOLD_P} ${BOLD_HOLE}"/>` +
     (bars ? `<rect x="382" y="330" width="44" height="74" rx="6" fill="#c8891f"/>` +
-            `<rect x="432" y="286" width="44" height="118" rx="6" fill="#c8891f"/>` : "") +
+            `<rect x="432" y="286" width="44" height="118" rx="6" fill="#000000"/>` : "") +
     `</svg>\n`;
 }
 

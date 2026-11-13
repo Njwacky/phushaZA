@@ -15,7 +15,7 @@ try{var _t=localStorage.getItem("pusha_theme");_t=_t?JSON.parse(_t):(matchMedia(
 <title>Pusha — the after-matric kit</title>
 
 
-<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20512%20512%22%20width%3D%22512%22%20height%3D%22512%22%20role%3D%22img%22%20aria-label%3D%22Pusha%22%3E%3Crect%20width%3D%22512%22%20height%3D%22512%22%20rx%3D%22114%22%20fill%3D%22%230b5c46%22%2F%3E%3Cg%20transform%3D%22translate(256%20256)%20scale(1)%20translate(-256%20-256)%22%3E%3Cg%20transform%3D%22translate(-22%206)%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M176%20132H268a96%2096%200%200%201%200%20192H234V380H176Z%20M234%20180H268a48%2048%200%200%201%200%2096H234Z%22%20fill%3D%22%23f7f5ef%22%2F%3E%3Crect%20x%3D%22286%22%20y%3D%22348%22%20width%3D%2236%22%20height%3D%2264%22%20rx%3D%224%22%20fill%3D%22%23c8891f%22%2F%3E%3Crect%20x%3D%22340%22%20y%3D%22302%22%20width%3D%2236%22%20height%3D%22110%22%20rx%3D%224%22%20fill%3D%22%23c8891f%22%2F%3E%3Crect%20x%3D%22394%22%20y%3D%22294%22%20width%3D%2236%22%20height%3D%22118%22%20rx%3D%224%22%20fill%3D%22%23c8891f%22%2F%3E%3Cpath%20fill%3D%22%23c8891f%22%20d%3D%22M412%20196L456%20300L368%20300Z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20512%20512%22%20width%3D%22512%22%20height%3D%22512%22%20role%3D%22img%22%20aria-label%3D%22Pusha%22%3E%3Crect%20width%3D%22512%22%20height%3D%22512%22%20rx%3D%22114%22%20fill%3D%22%230b5c46%22%2F%3E%3Cg%20transform%3D%22translate(256%20256)%20scale(1)%20translate(-256%20-256)%22%3E%3Cg%20transform%3D%22translate(-22%206)%22%3E%3Cpath%20fill-rule%3D%22evenodd%22%20d%3D%22M176%20132H268a96%2096%200%200%201%200%20192H234V380H176Z%20M234%20180H268a48%2048%200%200%201%200%2096H234Z%22%20fill%3D%22%23f7f5ef%22%2F%3E%3Crect%20x%3D%22286%22%20y%3D%22348%22%20width%3D%2236%22%20height%3D%2264%22%20rx%3D%224%22%20fill%3D%22%23c8891f%22%2F%3E%3Crect%20x%3D%22340%22%20y%3D%22302%22%20width%3D%2236%22%20height%3D%22110%22%20rx%3D%224%22%20fill%3D%22%23000000%22%2F%3E%3Crect%20x%3D%22394%22%20y%3D%22294%22%20width%3D%2236%22%20height%3D%22118%22%20rx%3D%224%22%20fill%3D%22%232563eb%22%2F%3E%3Cpath%20fill%3D%22%23c8891f%22%20d%3D%22M412%20196L456%20300L368%20300Z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E">
 
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -318,14 +318,17 @@ html[data-theme="dark"] .tile.grow{background:#1a2c13;color:#9ed67a}
 .sechead h3{margin:0}
 .blocklist{display:flex;flex-direction:column;gap:8px;margin:2px 0 0}
 .blockrow{display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--line);
-  border-radius:12px;background:var(--card);transition:border-color .15s ease,box-shadow .15s ease}
+  border-radius:12px;background:var(--card);transition:border-color .15s ease,box-shadow .15s ease;
+  width:100%;text-align:left;font-family:inherit;color:inherit;cursor:pointer;
+  -webkit-appearance:none;appearance:none}
+.blockrow:hover{border-color:var(--brand)}
+.blockrow:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
 .blockrow.on{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
 .blockrow .bk{flex:1;min-width:0}
 .blockrow .bk b{display:block;font-size:13.5px;letter-spacing:-.01em}
 .blockrow .bk span{display:block;font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .blockrow .tile{width:34px;height:34px;border-radius:10px}
 .blockrow .tile .icon{width:17px;height:17px}
-.blockrow .btn{padding:7px 11px;font-size:12px;border-radius:9px;min-width:64px}
 .previewhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:14px 0 6px}
 .previewhead #previewLabel{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .previewhead .btn{flex:0 0 auto;white-space:nowrap}
@@ -676,7 +679,7 @@ html[data-theme="dark"] .ctic.wa{background:rgba(37,211,102,.18);color:#5ee39b}
 <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11"/><path d="M8.2 11.2 12 15l3.8-3.8"/><path d="M5 19h14"/></symbol>
 <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V5"/><path d="M8.2 8.8 12 5l3.8 3.8"/><path d="M5 19h14"/></symbol>
 <symbol id="i-foundation" viewBox="0 0 24 24"><path d="M3 20.5h18"/><path d="M3 17.2h18v2.1H3z"/><path d="M8.2 14.2h6.2v3H8.2z"/><path d="M7.4 14.2V9.6"/><circle cx="7.4" cy="7.6" r="1.9"/><path d="M7.4 10.4 11 8.9"/></symbol>
-<symbol id="i-logo" viewBox="127 159 290 290"><g transform="translate(-22 6)"><path fill="#f7f5ef" stroke="none" fill-rule="evenodd" d="M176 132H268a96 96 0 0 1 0 192H234V380H176Z M234 180H268a48 48 0 0 1 0 96H234Z"/><rect x="286" y="348" width="36" height="64" rx="4" fill="#c8891f" stroke="none"/><rect x="340" y="302" width="36" height="110" rx="4" fill="#c8891f" stroke="none"/><rect x="394" y="294" width="36" height="118" rx="4" fill="#c8891f" stroke="none"/><path fill="#c8891f" stroke="none" d="M412 196L456 300L368 300Z"/></g></symbol>
+<symbol id="i-logo" viewBox="127 159 290 290"><g transform="translate(-22 6)"><path fill="#f7f5ef" stroke="none" fill-rule="evenodd" d="M176 132H268a96 96 0 0 1 0 192H234V380H176Z M234 180H268a48 48 0 0 1 0 96H234Z"/><rect x="286" y="348" width="36" height="64" rx="4" fill="#c8891f" stroke="none"/><rect x="340" y="302" width="36" height="110" rx="4" fill="#000000" stroke="none"/><rect x="394" y="294" width="36" height="118" rx="4" fill="#2563eb" stroke="none"/><path fill="#c8891f" stroke="none" d="M412 196L456 300L368 300Z"/></g></symbol>
 <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2.6"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 15v2"/></symbol>
 <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20h16"/><path d="M7 20v-6M12 20V8M17 20v-9"/></symbol>
 <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"/></symbol>
@@ -871,7 +874,7 @@ html[data-theme="dark"] .ctic.wa{background:rgba(37,211,102,.18);color:#5ee39b}
       <div class="blocklist" id="blockList"></div>
       <div class="previewhead">
         <span class="tiny muted" id="previewLabel">Preview</span>
-        <button class="btn xs ghost" id="copyPreviewBtn"><svg class="icon sm"><use href="#i-copy"/></svg> <span data-i18n="btn_copyshort">Copy this</span></button>
+        <button class="btn xs ghost" id="copyPreviewBtn"><svg class="icon sm"><use href="#i-copy"/></svg> <span data-i18n="btn_copyshort">Copy only</span></button>
       </div>
       <div class="varrow" id="varRow"></div>
       <div id="copyPreview" class="small copybox">Choose a block above to see it here.</div>
@@ -2561,7 +2564,7 @@ function checkSAID(raw){
 }
 
 
-const PUSHA_VERSION = "3.0";
+const PUSHA_VERSION = "3.1";
 
 /* ---------- 3b. SAYING IT OUT LOUD WHEN A SAVE FAILS ---------- */
 function storageFail(){
@@ -2721,7 +2724,7 @@ lock_pin_again:"Type the PIN again",
  b_pitch:"Business pitch",b_pitch_d:"For a funder, mentor or partner",
  b_fund:"Funding motivation",b_fund_d:"For NYDA, SEFA or a sponsor",
  btn_copy:"Copy",b_edit:"edit it before you send",p_nblocks:"blocks",
- btn_copyshort:"Copy this",btn_copied:"Copied",btn_selected:"Selected",
+ btn_copyshort:"Copy only",btn_copied:"Copied",btn_selected:"Selected",
  toast_copied:"Copied — paste it anywhere",toast_blocked:"Copy blocked by this browser — the text is selected, press Ctrl+C or long-press",
  d1:"Certified copy of my ID (not older than 3 months)",d2:"Original matric certificate or statement of results",
  d3:"Proof of address (letter from ward councillor, or a bill in your name)",d4:"Bank confirmation letter (get it free at your bank branch)",
@@ -2866,7 +2869,7 @@ lock_pin_again:"Bhala i-PIN futhi",
  b_pitch:"Isethulo sebhizinisi",b_pitch_d:"Sabaxhasi, abeluleki noma abalingani",
  b_fund:"Isizathu socelo lwemali",b_fund_d:"Se-NYDA, i-SEFA noma umxhasi",
  btn_copy:"Kopisha",b_edit:"hlela ngaphambi kokuthumela",p_nblocks:"amabhulokhi",
- btn_copyshort:"Kopisha lokhu",btn_copied:"Kukopishiwe",btn_selected:"Kukhethiwe",
+ btn_copyshort:"Kopisha kuphela",btn_copied:"Kukopishiwe",btn_selected:"Kukhethiwe",
  toast_copied:"Kukopishiwe — namathisela noma kuphi",toast_blocked:"Ikhopi ivinjelwe yilesi siphequluli — umbhalo ukhethiwe, cindezela Ctrl+C noma ubambe isikhathi eside",
  d1:"Ikhophi eqinisekisiwe ye-ID yami (engeyona endala kunezinyanga ezi-3)",d2:"Isitifiketi sokuqala sikamatric noma isitatimende semiphumela",
  d3:"Ubufakazi bekheli (incwadi evela kukhansela wasewadini, noma ibhili egameni lakho)",d4:"Incwadi yokuqinisekisa yasebhange (yithole mahhala egatsheni lakho lebhange)",
@@ -3011,7 +3014,7 @@ lock_pin_again:"Ngola PIN hape",
  b_pitch:"Tlhaloso ea khoebo",b_pitch_d:"Bakeng sa motšehetsi, moeletsi kapa molekane",
  b_fund:"Mabaka a kopo ea chelete",b_fund_d:"Bakeng sa NYDA, SEFA kapa motšehetsi",
  btn_copy:"Kopisa",b_edit:"e lokise pele u e romela",p_nblocks:"dikarolo",
- btn_copyshort:"Kopisa sena",btn_copied:"E kopisitsoe",btn_selected:"E khethiloe",
+ btn_copyshort:"Kopisa feela",btn_copied:"E kopisitsoe",btn_selected:"E khethiloe",
  toast_copied:"E kopisitsoe — e manehe kae kapa kae",toast_blocked:"Kopi e thibetsoe ke sebatli sena — mongolo o khethiloe, tobetsa Ctrl+C kapa tšoara nako e telele",
  d1:"Khopi e netefalitsoeng ea ID ea ka (e seng ea khale ho feta likhoeli tse 3)",d2:"Setifikeiti sa mantlha sa matric kapa setatemente sa liphetho",
  d3:"Bopaki ba aterese (lengolo le tsoang ho khanselara, kapa bile e lebitsong la hao)",d4:"Lengolo la netefatso ea banka (le nka mahala lekaleng la hao la banka)",
@@ -3153,7 +3156,7 @@ lock_pin_again:"Bhala i-PIN godu",
  b_pitch:"Isethulo somrhwebo",b_pitch_d:"Sabaxhasi, abeluleki namkha abalingani",
  b_fund:"Isizathu socelo lwemali",b_fund_d:"Se-NYDA, i-SEFA namkha umxhasi",
  btn_copy:"Kopisha",b_edit:"hlela ngaphambi kokuthumela",p_nblocks:"amabhulokhi",
- btn_copyshort:"Kopisha lokhu",btn_copied:"Kukopishiwe",btn_selected:"Kukhethiwe",
+ btn_copyshort:"Kopisha kuphela",btn_copied:"Kukopishiwe",btn_selected:"Kukhethiwe",
  toast_copied:"Kukopishiwe — namathisela noma kuphi",toast_blocked:"Ikhopi ivinjelwe yilesi siphequluli — umbhalo ukhethiwe, tinya Ctrl+C namkha bamba isikhathi eside",
  d1:"Ikhophi eqinisekisiweko ye-ID yami (engadluli iinyanga ezi-3)",d2:"Isitifiketi sokuqala samatric namkha isitatimende semiphumela",
  d3:"Ubufakazi bekheli (incwadi evela kukhansela, namkha ibhili egameni lakho)",d4:"Incwadi yokuqinisekisa yebhanga (yithole mahala egatsheni lakho lebhanga)",
@@ -3660,30 +3663,26 @@ function showBlock(key, scroll, quiet){
   const meta = BLOCKS.find(b => b.key === key) || BLOCKS[0];
   $("#previewLabel").textContent = t(meta.name) + " · " + t("b_edit");
   renderVarRow(key, list.length, vi);
-  $$("#blockList .blockrow").forEach(r => r.classList.toggle("on", r.dataset.block === key));
+  $$("#blockList .blockrow").forEach(r => {
+    const on = r.dataset.block === key;
+    r.classList.toggle("on", on);
+    r.setAttribute("aria-pressed", on ? "true" : "false");
+  });
   if (scroll) $("#copyPreview").scrollIntoView({ behavior:"smooth", block:"nearest" });
   return text;
 }
 
 function renderBlocks(){
+  /* rows select the block; the only Copy affordance is the preview button below.
+     the row is a real button so it stays reachable by keyboard and screen readers. */
   $("#blockList").innerHTML = BLOCKS.map(b => `
-    <div class="blockrow" data-block="${b.key}">
-      <div class="tile ${b.tile}">${ico(b.icon)}</div>
-      <div class="bk"><b>${t(b.name)}</b><span>${t(b.desc)}</span></div>
-      <button class="btn sm ghost" data-copy="${b.key}">${ico("copy","sm")} ${t("btn_copy")}</button>
-    </div>`).join("");
+    <button type="button" class="blockrow" data-block="${b.key}" aria-pressed="false">
+      <span class="tile ${b.tile}">${ico(b.icon)}</span>
+      <span class="bk"><b>${t(b.name)}</b><span>${t(b.desc)}</span></span>
+    </button>`).join("");
   $$("#blockList .blockrow").forEach(row => {
-    row.addEventListener("click", e => {
-      const key = row.dataset.block;
-      if (e.target.closest("[data-copy]")) return;   // the Copy button handles itself
-      showBlock(key);
-    });
+    row.addEventListener("click", () => showBlock(row.dataset.block));
   });
-  $$("#blockList [data-copy]").forEach(btn => btn.addEventListener("click", async e => {
-    e.stopPropagation();
-    const text = showBlock(btn.dataset.copy);
-    await copyText(text, btn);
-  }));
   showBlock(activeBlock);
 }
 renderBlocks();

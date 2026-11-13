@@ -295,30 +295,26 @@ function showBlock(key, scroll, quiet){
   const meta = BLOCKS.find(b => b.key === key) || BLOCKS[0];
   $("#previewLabel").textContent = t(meta.name) + " · " + t("b_edit");
   renderVarRow(key, list.length, vi);
-  $$("#blockList .blockrow").forEach(r => r.classList.toggle("on", r.dataset.block === key));
+  $$("#blockList .blockrow").forEach(r => {
+    const on = r.dataset.block === key;
+    r.classList.toggle("on", on);
+    r.setAttribute("aria-pressed", on ? "true" : "false");
+  });
   if (scroll) $("#copyPreview").scrollIntoView({ behavior:"smooth", block:"nearest" });
   return text;
 }
 
 function renderBlocks(){
+  /* rows select the block; the only Copy affordance is the preview button below.
+     the row is a real button so it stays reachable by keyboard and screen readers. */
   $("#blockList").innerHTML = BLOCKS.map(b => `
-    <div class="blockrow" data-block="${b.key}">
-      <div class="tile ${b.tile}">${ico(b.icon)}</div>
-      <div class="bk"><b>${t(b.name)}</b><span>${t(b.desc)}</span></div>
-      <button class="btn sm ghost" data-copy="${b.key}">${ico("copy","sm")} ${t("btn_copy")}</button>
-    </div>`).join("");
+    <button type="button" class="blockrow" data-block="${b.key}" aria-pressed="false">
+      <span class="tile ${b.tile}">${ico(b.icon)}</span>
+      <span class="bk"><b>${t(b.name)}</b><span>${t(b.desc)}</span></span>
+    </button>`).join("");
   $$("#blockList .blockrow").forEach(row => {
-    row.addEventListener("click", e => {
-      const key = row.dataset.block;
-      if (e.target.closest("[data-copy]")) return;   // the Copy button handles itself
-      showBlock(key);
-    });
+    row.addEventListener("click", () => showBlock(row.dataset.block));
   });
-  $$("#blockList [data-copy]").forEach(btn => btn.addEventListener("click", async e => {
-    e.stopPropagation();
-    const text = showBlock(btn.dataset.copy);
-    await copyText(text, btn);
-  }));
   showBlock(activeBlock);
 }
 renderBlocks();
