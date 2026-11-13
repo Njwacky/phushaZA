@@ -268,6 +268,11 @@ function lockSheet(mode){
         const blob0 = Store.get("pusha_vault", {});
         const res = await enc.decrypt(blob0, pin);
         vault = res.obj || {}; vaultPin = res.holder;
+        /* drop legacy bank fields from the freshly decrypted vault, then re-seal
+           so the stale values disappear from localStorage instead of surviving unlocks */
+        if (typeof pruneLegacyBank === "function" && pruneLegacyBank(vault)){
+          try { const nb = await enc.encryptWith(vaultPin, vault); if (Store.set("pusha_vault", nb)) {/* re-sealed */} } catch(e){}
+        }
         locked = false; pinFails = 0; pinBlockUntil = 0;
         fillVault(); setLockedUI();
         restoreLastView();

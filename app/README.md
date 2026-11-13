@@ -91,7 +91,7 @@ work, so a school computer lab and a R700 Android get the same app:
 | the five sections | a bar pinned to the **bottom**, thumb reach | a **column on the left**, icon + label in a row |
 | brand | in the header | at the top of the rail (the header shows the section name instead) |
 | a sheet | slides up from the bottom edge, full width | a **centred dialog** with rounded corners, 640 px wide |
-| busy views | one column, full width | two or three columns: the idea list is 2-up from 1024 px and 3-up from 1240 px, school + banking cards sit side by side, money and path pair their short cards |
+| busy views | one column, full width | two or three columns: the idea list is 2-up from 1024 px and 3-up from 1240 px, the school card spans the full row, money and path pair their short cards |
 | primary buttons | full width | content width (`#saveVault`, *Add to cashbook* stop being bars) |
 | toasts | above the bottom bar | bottom, centred over the content (not over the rail) |
 
