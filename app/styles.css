@@ -293,14 +293,17 @@ html[data-theme="dark"] .tile.grow{background:#1a2c13;color:#9ed67a}
 .sechead h3{margin:0}
 .blocklist{display:flex;flex-direction:column;gap:8px;margin:2px 0 0}
 .blockrow{display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--line);
-  border-radius:12px;background:var(--card);transition:border-color .15s ease,box-shadow .15s ease}
+  border-radius:12px;background:var(--card);transition:border-color .15s ease,box-shadow .15s ease;
+  width:100%;text-align:left;font-family:inherit;color:inherit;cursor:pointer;
+  -webkit-appearance:none;appearance:none}
+.blockrow:hover{border-color:var(--brand)}
+.blockrow:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
 .blockrow.on{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
 .blockrow .bk{flex:1;min-width:0}
 .blockrow .bk b{display:block;font-size:13.5px;letter-spacing:-.01em}
 .blockrow .bk span{display:block;font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .blockrow .tile{width:34px;height:34px;border-radius:10px}
 .blockrow .tile .icon{width:17px;height:17px}
-.blockrow .btn{padding:7px 11px;font-size:12px;border-radius:9px;min-width:64px}
 .previewhead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:14px 0 6px}
 .previewhead #previewLabel{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .previewhead .btn{flex:0 0 auto;white-space:nowrap}

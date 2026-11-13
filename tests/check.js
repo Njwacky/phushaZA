@@ -33,11 +33,12 @@ const log = (k, v) => { out[k] = v; };
   log("packDotWhenComplete", await p.$eval('#tabs button[data-view="pack"]', el => el.classList.contains("alert")));
   log("copyBtnSize", await p.$eval("#copyPreviewBtn", el => { const r = el.getBoundingClientRect(); return [Math.round(r.width), Math.round(r.height)]; }));
 
-  // copy really copies
-  await p.click('#blockList [data-copy="cv"]'); await p.waitForTimeout(400);
+  // copy really copies: pick the CV block, then the preview's Copy only button
+  await p.click('#blockList .blockrow[data-block="cv"]'); await p.waitForTimeout(300);
+  await p.click('#copyPreviewBtn'); await p.waitForTimeout(400);
   log("clipboard", (await p.evaluate(() => navigator.clipboard.readText())).slice(0, 24));
   await p.waitForTimeout(1300);
-  log("copyLabelRestored", await p.$eval('#blockList [data-copy="cv"]', el => el.textContent.trim()));
+  log("copyLabelRestored", await p.$eval('#copyPreviewBtn', el => el.textContent.trim()));
 
   // custom CV section survives reload and prints
   await p.click("#openCV"); await p.waitForTimeout(300);

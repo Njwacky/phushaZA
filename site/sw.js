@@ -4,7 +4,7 @@
    a link to a learning site still goes to the phone's network. Optional
    usage requests go directly to Netlify only after consent.
    ================================================================ */
-const CACHE = "pusha-3.0.0";     // bump when you ship a new version
+const CACHE = "pusha-3.1.0";     // bump when you ship a new version
 const SHELL = [
   "./", "index.html", "styles.css", "theme.js", "manifest.webmanifest",
   "icons/icon-192.png", "icons/icon-512.png", "icons/icon.svg",

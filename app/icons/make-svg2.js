@@ -4,6 +4,9 @@
    Writes icon-d.svg … icon-g.svg (plus maskable cuts).  Run from app/.   */
 const fs = require("fs");
 const GREEN = "#0b5c46", PAPER = "#f7f5ef", GOLD = "#c8891f";
+/* the shipping mark (E2): first bar gold, second black, third blue — keep in step with index.html #i-logo */
+const BAR_BLACK = "#000000", BAR_BLUE = "#2563eb";
+const BAR_COLS = [GOLD, BAR_BLACK, BAR_BLUE];
 
 const P_BOWL = "M176 132H268a96 96 0 0 1 0 192H234V380H176Z";
 const P_HOLE = "M234 180H268a48 48 0 0 1 0 96H234Z";
@@ -31,7 +34,7 @@ function steps(){
 
 function bars(){
   const base = 412, w = 36, gap = 18, x0 = 286, hs = [64, 110, 156];
-  return hs.map((h, i) => `<rect x="${x0 + i * (w + gap)}" y="${base - h}" width="${w}" height="${h}" rx="4" fill="${GOLD}"/>`).join("");
+  return hs.map((h, i) => `<rect x="${x0 + i * (w + gap)}" y="${base - h}" width="${w}" height="${h}" rx="4" fill="${BAR_COLS[i]}"/>`).join("");
 }
 
 function caret(){
@@ -59,8 +62,8 @@ function barsArrowThrough(){
 /* E2 — the tallest bar keeps going and becomes the arrow */
 function barsIntoArrow(){
   const x = BAR_X0 + 2 * (BAR_W + BAR_GAP) + BAR_W / 2;   // centre of the third bar
-  return barAt(0, BAR_H[0]) + barAt(1, BAR_H[1]) +
-         `<rect x="${x - BAR_W / 2}" y="${BAR_BASE - 118}" width="${BAR_W}" height="118" rx="4" fill="${GOLD}"/>` +
+  return barAt(0, BAR_H[0], GOLD) + barAt(1, BAR_H[1], BAR_BLACK) +
+         `<rect x="${x - BAR_W / 2}" y="${BAR_BASE - 118}" width="${BAR_W}" height="118" rx="4" fill="${BAR_BLUE}"/>` +
          `<path fill="${GOLD}" d="M${x} 196L${x + 44} ${BAR_BASE - 112}L${x - 44} ${BAR_BASE - 112}Z"/>`;
 }
 

@@ -329,9 +329,9 @@ Rules that hold in all sixteen:
   or money the person has not entered.
 * Where the vault is empty the text says so in `[square brackets]` — that is the
   shopping list of what to fill in before sending, not filler.
-* The choice is per block and is remembered (`pusha_blockvar`), the Copy button on
-  the row and on the preview both copy **the version on screen**, and the chips are
-  40 px tall for the thumb.
+* The choice is per block and is remembered (`pusha_blockvar`). Each row selects
+  its block; the preview's **Copy only** button copies **the version on screen**,
+  and the chips are 40 px tall for the thumb.
 
 ## The vault lock (PIN)
 
@@ -475,8 +475,8 @@ NODE_PATH=/tmp/node_modules node tests/features.js http://127.0.0.1:8000/index.h
 
 It proves: search (and the empty state), the freshness line, the tap-target sweep
 (0 violations, the deliberately small Copy button excepted) and contrast, the four
-versions of each copy-paste block (4 distinct texts each, the Copy button handing
-over the one on screen, the choice surviving a reload), backup
+versions of each copy-paste block (4 distinct texts each, the preview's Copy only
+button handing over the one on screen, the choice surviving a reload), backup
 export → wipe → import, a backup taken with a PIN containing no readable name,
 the storage-full banner and toast, Undo on a deleted cashbook line, share falling
 back to the clipboard, the Esc/focus behaviour of sheets, photo add + remove, the
